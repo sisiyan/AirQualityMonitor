@@ -5,6 +5,7 @@
 
 mdkir /home/ubuntu/data
 mkdir /home/ubuntu/data_unpack
+cd /home/ubuntu/data
 
 wget https://aqs.epa.gov/aqsweb/airdata/download_files.html#Raw/hourly*.zip
 
