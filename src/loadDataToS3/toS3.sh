@@ -3,11 +3,11 @@
 # Then the script expands all files using bzip2
 # Finally the files are uploaded to S3 to the specific bucket s3://ac-reddit-data/Raw/
 
-#mkdir climate_data
-#mkdir climate_data_unpack
-#cd climate_data
-#wget -r -nH -nd -R index.html* https://www.ncei.noaa.gov/data/global-hourly/archive/
-#wait
+mkdir climate_data
+mkdir climate_data_unpack
+cd climate_data
+wget -r -nH -nd -R index.html* https://www.ncei.noaa.gov/data/global-hourly/archive/
+wait
 
 for filename in /home/ubuntu/climate_data/*; do
   tar zxvf "$filename" -C /home/ubuntu/climate_data_unpack
