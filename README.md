@@ -38,3 +38,5 @@ peg service spark-cluster kafka start
     s3://sy-insight-aq-climate-data
 4. Launch RDS with MySQL
     follow the instruction https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.MySQL.html
+
+5. Create an EC2 instance with 300 GB for Download and transfer data.
