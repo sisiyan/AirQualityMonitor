@@ -8,6 +8,7 @@ from pyspark.sql.types import StructType
 from pyspark.sql.types import StructField
 from pyspark.sql.types import StringType
 from pyspark import SparkConf, SparkContext, SQLContext
+from boto.s3.connection import S3Connection
 
 sc = SparkContext()
 sqlContext = SQLContext(sc)
