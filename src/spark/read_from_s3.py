@@ -2,13 +2,12 @@ import sys
 import json
 import os
 
-from pyspark import SparkContext
-from pyspark import SparkConf
 from pyspark.sql import SparkSession
 import mysql.connector as sqlcon
 from pyspark.sql.types import StructType
 from pyspark.sql.types import StructField
 from pyspark.sql.types import StringType
+from pyspark import SparkConf, SparkContext, SQLContext
 
 sc = SparkContext()
 spark = SparkSession(sc)
