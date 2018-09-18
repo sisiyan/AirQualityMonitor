@@ -12,6 +12,11 @@ from pyspark import SparkConf, SparkContext, SQLContext
 sc = SparkContext()
 sqlContext = SQLContext(sc)
 
+"""
+    Files with different parameters will be joined together to form a big dataframe
+    by using the location and GMT_time
+"""
+#Define the column names for the target schema
 field = [StructField("state_name",StringType(),True),StructField("county_name",StringType(),True),
     StructField("latitude",StringType(),True),StructField("longitude",StringType(),True),
     StructField("GMT_year", StringType(), True), StructField("GMT_month", StringType(), True),
@@ -27,7 +32,80 @@ field = [StructField("state_name",StringType(),True),StructField("county_name",S
 
 schema = StructType(field)
 
+#Create an empty dataframe with the column names
 df = sqlContext.createDataFrame(sc.emptyRDD(),schema)
 print df
 
+#define the parameter code list
+parameter_codes = ['44201', '42401','42101','42602','88101','88502','81102',
+    'SPEC','PM10SPEC','WIND','TEMP','PRESS','RH_DP']
+
+#define the dictionary map the file names to schema column names
+schema_dict = {
+    '44201': "ozone", '42401': "SO2",'42101':"CO",'42602':"NO2",
+    '88101': "PM2.5_FRM",'88502':"PM2.5_nonFRM",'81102':"PM10_mass",
+    'SPEC':"PM2.5_speciation",'PM10SPEC': "PM10_speciation",
+    'WIND':"winds",'TEMP':"temperature",'PRESS':"pressure",'RH_DP':"RH_dewpoint"
+}
+
+def file_year_paraCode(fname):
+    '''
+    Given the filename XXX_Code_year.extension, return integer year and code
+    '''
+    try:
+        basename = fname.split('.')[0]
+        parameterCode = basename.split('_')[1]
+        year_string = basename.split('_')[2]
+    except (ValueError, IndexError):
+        return None
+    if parameterCode not in parameter_codes:
+        return None
+    year = convert_to_int(year_string)
+    if not year:
+        return None
+    return year, parameterCode
+
+# def get_file_list(bucket_name):
+#     '''
+#     Given the S3 bucket, return a list of files sorted in
+#     reverse chronological order
+#     '''
+#     file_list = []
+#
+#     conn = S3Connection()
+#     bucket = conn.get_bucket(bucket_name)
+#     for bucket_object in bucket.get_all_keys():
+#         fname = bucket_object.key
+#         if not fname.startswith('hourly'):
+#             continue
+#         year, parameterCode = file_year_paraCode(fname)
+#         if not year:
+#             continue
+#         file_list.append((fname, year))
+#
+#     file_list.sort(key=lambda x: x[1], reverse=True)
+#
+#     return [f[0] for f in file_list]
+
+def get_file_list_perYear(bucket_name, target_year):
+    '''
+    Given the S3 bucket, return a list of files in the same year
+    '''
+    file_list = []
+
+    conn = S3Connection()
+    bucket = conn.get_bucket(bucket_name)
+    for bucket_object in bucket.get_all_keys():
+        fname = bucket_object.key
+        if not fname.startswith('hourly'):
+            continue
+        year, parameterCode = file_year_paraCode(fname)
+        if not year:
+            continue
+        if year == target_year:
+        file_list.append((fname, year))
+
+    return [f[0] for f in file_list]
+
+print get_file_list_perYear("s3a://sy-insight-epa/raw_data/", 2018)
 #file = sc.textFile("s3a://sy-insight-epa/raw_data/hourly_42401_2018.csv")
