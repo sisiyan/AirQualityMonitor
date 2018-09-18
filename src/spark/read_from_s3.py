@@ -10,7 +10,7 @@ from pyspark.sql.types import StringType
 from pyspark import SparkConf, SparkContext, SQLContext
 
 sc = SparkContext()
-spark = SparkSession(sc)
+sqlContext = SQLContext(sc)
 
 field = [StructField("state_name",StringType(),True),StructField("county_name",StringType(),True),
     StructField("latitude",StringType(),True),StructField("longitude",StringType(),True),
