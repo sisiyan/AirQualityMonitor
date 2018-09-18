@@ -91,6 +91,7 @@ def get_file_list_perYear(bucket_name, target_year):
     '''
     Given the S3 bucket, return a list of files in the same year
     '''
+
     file_list = []
 
     conn = S3Connection()
@@ -103,7 +104,7 @@ def get_file_list_perYear(bucket_name, target_year):
         if not year:
             continue
         if year == target_year:
-        file_list.append((fname, year))
+            file_list.append((fname, year))
 
     return [f[0] for f in file_list]
 
