@@ -68,9 +68,9 @@ def file_year_paraCode(fname):
         parameterCode = basename.split('_')[1]
         if parameterCode == 'RH':
             year_string = basename.split('_')[3]
-            parameterCode = "RH_DP"            
+            parameterCode = "RH_DP"
         else:
-        year_string = basename.split('_')[2]
+            year_string = basename.split('_')[2]
     except (ValueError, IndexError):
         return None
     if parameterCode not in parameter_codes:
