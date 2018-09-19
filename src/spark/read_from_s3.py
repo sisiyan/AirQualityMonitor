@@ -109,5 +109,9 @@ def get_file_list_perYear(bucket_name, target_year):
 
     return [f[0] for f in file_list]
 
-print get_file_list_perYear("s3a://sy-insight-epa/raw_data/", 2018)
+#test the correctness
+print get_file_list_perYear("sy-insight-epa-data", 2018)
 #file = sc.textFile("s3a://sy-insight-epa/raw_data/hourly_42401_2018.csv")
+
+#for yr in range(1980, 2019):
+files_year = get_file_list_perYear("sy-insight-epa-data", 1980)
