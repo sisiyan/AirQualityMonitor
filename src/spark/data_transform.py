@@ -124,6 +124,7 @@ for fname in files_year:
     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
     year, parameterCode = file_year_paraCode(fname)
+    print schema_dict[parameterCode]
     df = df.withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(schema_dict[parameterCode], df["Sample Measurement"].cast(DoubleType())).withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
 
 
@@ -133,15 +134,15 @@ for fname in files_year:
         df_join = df_join.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
 
 
-df_join.write\
-    .format("jdbc")\
-    .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
-    .option("driver", "com.mysql.jdbc.Driver")\
-    .option("dbtable", "testTable")\
-    .option("user", "root")\
-    .option("password", "ys8586dswfye") \
-    .mode('append')\
-    .save()
+# df_join.write\
+#     .format("jdbc")\
+#     .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
+#     .option("driver", "com.mysql.jdbc.Driver")\
+#     .option("dbtable", "testTable")\
+#     .option("user", "root")\
+#     .option("password", "ys8586dswfye") \
+#     .mode('append')\
+#     .save()
 
 
 
