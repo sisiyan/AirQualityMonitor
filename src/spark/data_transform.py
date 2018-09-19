@@ -149,7 +149,7 @@ for fname in files_year:
 
 
 
-print df_join.take(10)
+print df_join
 #print "======================== Total Number of Rows ========================="
 # print df_join.count()
 # print "========================================================================"
