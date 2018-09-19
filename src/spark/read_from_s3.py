@@ -117,7 +117,7 @@ def get_file_list_perYear(bucket_name, target_year):
     for bucket_object in bucket.get_all_keys():
         fname = bucket_object.key
         print fname
-        if not fname.startswith('hourly'):
+        if not fname.startswith('hourly') and not fname.startswith('Hourly'):
             continue
         # year, parameterCode = file_year_paraCode(fname)
         # if not year:
@@ -128,7 +128,7 @@ def get_file_list_perYear(bucket_name, target_year):
     return [f[0] for f in file_list]
 
 #test the correctness
-print get_file_list_perYear("sy-insight-epa-data", 2018)
+#print get_file_list_perYear("sy-insight-epa-data", 2018)
 #file = sc.textFile("s3a://sy-insight-epa/raw_data/hourly_42401_2018.csv")
 
 #for yr in range(1980, 2019):
