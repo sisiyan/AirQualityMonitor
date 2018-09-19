@@ -70,9 +70,11 @@ def file_year_paraCode(fname):
     except (ValueError, IndexError):
         return None
     if parameterCode not in parameter_codes:
+        print parameterCode
         return None
     year = convert_to_int(year_string)
     if not year:
+        print parameterCode
         return None
     return year
 
@@ -120,8 +122,7 @@ def get_file_list_perYear(bucket_name, target_year):
         if not fname.startswith('hourly') and not fname.startswith('Hourly'):
             continue
         year = file_year_paraCode(fname)
-        print year
-
+        
         if not year:
             continue
         if year == target_year:
