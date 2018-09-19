@@ -135,7 +135,7 @@ for fname in files_year:
 
 df_join.write\
     .format("jdbc")\
-    .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airqualityweather")\
+    .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
     .option("driver", "com.mysql.jdbc.Driver")\
     .option("dbtable", "testTable")\
     .option("user", "root")\
