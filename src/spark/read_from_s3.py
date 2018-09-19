@@ -77,7 +77,8 @@ def file_year_paraCode(fname):
     return year, parameterCode
 
 year, parameterCode = file_year_paraCode("hourly_42401_2018.csv")
-
+print year
+print parameterCode
 
 # def get_file_list(bucket_name):
 #     '''
