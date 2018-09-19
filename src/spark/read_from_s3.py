@@ -134,7 +134,7 @@ print "======================== Total Number of Rows ========================="
 print df_join.count()
 print "========================================================================"
 
-df_join = df_join.where(not (df_join.winds.isNull() & df_join.temperature.isNull() & df_join.pressure.isNull()))
+df_join = df_join.filter(not (df_join.winds.isNull() & df_join.temperature.isNull() & df_join.pressure.isNull()))
 
 print df_join.take(10)
 print "======================== Total Number of Rows ========================="
