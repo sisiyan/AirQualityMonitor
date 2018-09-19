@@ -116,10 +116,11 @@ def get_file_list_perYear(bucket_name, target_year):
 
     for bucket_object in bucket.get_all_keys():
         fname = bucket_object.key
-        print fname
+
         if not fname.startswith('hourly') and not fname.startswith('Hourly'):
             continue
-        # year, parameterCode = file_year_paraCode(fname)
+        year, parameterCode = file_year_paraCode(fname)
+        print str(year)+"_"+parameterCode
         # if not year:
         #     continue
         # if year == target_year:
