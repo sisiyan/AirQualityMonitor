@@ -49,6 +49,16 @@ schema_dict = {
     'WIND':"winds",'TEMP':"temperature",'PRESS':"pressure",'RH_DP':"RH_dewpoint"
 }
 
+def convert_to_int(string):
+    '''
+    Returns an integer if it can or returns None otherwise
+    '''
+    try:
+        number = int(string)
+    except ValueError:
+        return None
+    return number
+
 def file_year_paraCode(fname):
     '''
     Given the filename XXX_Code_year.extension, return integer year and code
