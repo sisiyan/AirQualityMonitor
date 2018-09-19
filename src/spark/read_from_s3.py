@@ -76,6 +76,9 @@ def file_year_paraCode(fname):
         return None
     return year, parameterCode
 
+year, parameterCode = file_year_paraCode("hourly_42401_2018.csv")
+
+
 # def get_file_list(bucket_name):
 #     '''
 #     Given the S3 bucket, return a list of files sorted in
@@ -98,6 +101,8 @@ def file_year_paraCode(fname):
 #
 #     return [f[0] for f in file_list]
 
+
+"""
 def get_file_list_perYear(bucket_name, target_year):
     '''
     Given the S3 bucket, return a list of files in the same year
@@ -125,3 +130,4 @@ print get_file_list_perYear("sy-insight-epa-data", 2018)
 
 #for yr in range(1980, 2019):
 files_year = get_file_list_perYear("sy-insight-epa-data", 1980)
+"""
