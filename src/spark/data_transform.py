@@ -128,7 +128,9 @@ for fname in files_year:
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
     year, parameterCode = file_year_paraCode(fname)
     print schema_dict[parameterCode]
-    df = df.withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(schema_dict[parameterCode], df["Sample Measurement"].cast(DoubleType())).withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
+    parameter = schema_dict[parameterCode]
+    df = df.withColumnRenamed("Sample Measurement", parameter).withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
+    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType()))
 
 
     if df_join == None:
