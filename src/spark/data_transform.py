@@ -117,7 +117,10 @@ def get_file_list_perYear(bucket_name, target_year):
 files_year = get_file_list_perYear("sy-insight-epa-data", 1980)
 print files_year
 
-files_year = ['hourly_42101_1980.csv', 'hourly_42401_1980.csv', 'hourly_81102_1980.csv', 'hourly_WIND_1980.csv']
+#files_year = ['hourly_42101_1980.csv', 'hourly_42401_1980.csv', 'hourly_81102_1980.csv', 'hourly_WIND_1980.csv']
+
+files_year = ['hourly_42101_1980.csv', 'hourly_42401_1980.csv']
+
 df_join = None
 
 for fname in files_year:
@@ -147,9 +150,9 @@ for fname in files_year:
 
 
 print df_join.take(10)
-print "======================== Total Number of Rows ========================="
-print df_join.count()
-print "========================================================================"
+#print "======================== Total Number of Rows ========================="
+# print df_join.count()
+# print "========================================================================"
 
 
 # df_join = df_join.filter(~(df_join.winds.isNull() & df_join.temperature.isNull() & df_join.pressure.isNull()))
