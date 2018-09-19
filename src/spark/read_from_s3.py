@@ -66,6 +66,10 @@ def file_year_paraCode(fname):
     try:
         basename = fname.split('.')[0]
         parameterCode = basename.split('_')[1]
+        if parameterCode == 'RH':
+            year_string = basename.split('_')[3]
+            parameterCode = "RH_DP"            
+        else:
         year_string = basename.split('_')[2]
     except (ValueError, IndexError):
         return None
@@ -122,7 +126,7 @@ def get_file_list_perYear(bucket_name, target_year):
         if not fname.startswith('hourly') and not fname.startswith('Hourly'):
             continue
         year = file_year_paraCode(fname)
-        
+
         if not year:
             continue
         if year == target_year:
