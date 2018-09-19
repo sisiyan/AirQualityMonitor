@@ -128,7 +128,13 @@ for fname in files_year:
         df_join = df
     else:
         df_join = df_join.join(df, ["state_name",'county_name','Latitude','Longitude','Date_GMT','Time_GMT'],"outer")
-        df_join = df_join.where(not (df_join.winds.isNull() & df_join.temperature.isNull() & df_join.pressure.isNull()))
+
+print df_join.take(10)
+print "======================== Total Number of Rows ========================="
+print df_join.count()
+print "========================================================================"
+
+df_join = df_join.where(not (df_join.winds.isNull() & df_join.temperature.isNull() & df_join.pressure.isNull()))
 
 print df_join.take(10)
 print "======================== Total Number of Rows ========================="
