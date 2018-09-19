@@ -129,5 +129,8 @@ for fname in files_year:
     else:
         df_join = df_join.join(df, ["state_name",'county_name','Latitude','Longitude','Date_GMT','Time_GMT'],"outer")
 
-print df_join.count()
+
 print df_join.take(10)
+print "======================== Total Number of Rows ========================="
+print df_join.count()
+print "========================================================================"
