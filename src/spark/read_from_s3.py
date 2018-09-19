@@ -74,7 +74,7 @@ def file_year_paraCode(fname):
     year = convert_to_int(year_string)
     if not year:
         return None
-    return year, parameterCode
+    return year
 
 # year, parameterCode = file_year_paraCode("hourly_42401_2018.csv")
 # print year
@@ -119,12 +119,13 @@ def get_file_list_perYear(bucket_name, target_year):
 
         if not fname.startswith('hourly') and not fname.startswith('Hourly'):
             continue
-        year, parameterCode = file_year_paraCode(fname)
-        print str(year)+"_"+parameterCode
-        # if not year:
-        #     continue
-        # if year == target_year:
-        #     file_list.append((fname, year))
+        year = file_year_paraCode(fname)
+        print year
+
+        if not year:
+            continue
+        if year == target_year:
+            file_list.append((fname, year))
 
     return [f[0] for f in file_list]
 
