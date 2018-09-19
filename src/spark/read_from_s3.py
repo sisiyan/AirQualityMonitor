@@ -9,7 +9,7 @@ from pyspark.sql.types import StructField
 from pyspark.sql.types import StringType
 from pyspark import SparkConf, SparkContext, SQLContext
 from boto.s3.connection import S3Connection
-
+import util
 sc = SparkContext()
 sqlContext = SQLContext(sc)
 
@@ -72,41 +72,15 @@ def file_year_paraCode(fname):
         else:
             year_string = basename.split('_')[2]
     except (ValueError, IndexError):
-        return None
+        return None, None
     if parameterCode not in parameter_codes:
         print parameterCode
-        return None
+        return None, None
     year = convert_to_int(year_string)
     if not year:
         print parameterCode
-        return None
-    return year
-
-# year, parameterCode = file_year_paraCode("hourly_42401_2018.csv")
-# print year
-# print parameterCode
-
-# def get_file_list(bucket_name):
-#     '''
-#     Given the S3 bucket, return a list of files sorted in
-#     reverse chronological order
-#     '''
-#     file_list = []
-#
-#     conn = S3Connection()
-#     bucket = conn.get_bucket(bucket_name)
-#     for bucket_object in bucket.get_all_keys():
-#         fname = bucket_object.key
-#         if not fname.startswith('hourly'):
-#             continue
-#         year, parameterCode = file_year_paraCode(fname)
-#         if not year:
-#             continue
-#         file_list.append((fname, year))
-#
-#     file_list.sort(key=lambda x: x[1], reverse=True)
-#
-#     return [f[0] for f in file_list]
+        return None, None
+    return year, parameterCode
 
 
 
@@ -125,7 +99,7 @@ def get_file_list_perYear(bucket_name, target_year):
 
         if not fname.startswith('hourly') and not fname.startswith('Hourly'):
             continue
-        year = file_year_paraCode(fname)
+        year,parameterCode = file_year_paraCode(fname)
 
         if not year:
             continue
@@ -141,3 +115,19 @@ def get_file_list_perYear(bucket_name, target_year):
 #for yr in range(1980, 2019):
 files_year = get_file_list_perYear("sy-insight-epa-data", 1980)
 print files_year
+
+df_join = None
+
+for fname in files_year:
+    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
+    df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
+    year, parameterCode = file_year_paraCode(fname)
+    df = df.withColumnRenamed("Sample Measurement", schema_dict[parameterCode]).withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
+
+    if df_join == None:
+        df_join = df
+    else:
+        df_join = df_join.join(df, ["state_name",'county_name','Latitude','Longitude','Date_GMT','Time_GMT'],"outer")
+
+print df_join.count()
+print df_join.take(10)
