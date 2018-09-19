@@ -133,12 +133,16 @@ for fname in files_year:
         df_join = df_join.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
 
 
-df_join.write.format('jdbc').options(
-      url='jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airqualityweather',
-      driver='com.mysql.jdbc.Driver',
-      dbtable='testTable',
-      user='root',
-      password='ys8586dswfye').mode('append').save()
+df_join.write\
+    .format("jdbc")\
+    .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airqualityweather")\
+    .option("driver", "com.mysql.jdbc.Driver")\
+    .option("dbtable", "testTable")\
+    .option("user", "root")\
+    .option("password", "ys8586dswfye") \
+    .mode('append')\
+    .save()
+
 
 
 print df_join.take(10)
