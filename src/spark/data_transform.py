@@ -124,13 +124,13 @@ for fname in files_year:
     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
     year, parameterCode = file_year_paraCode(fname)
-    df = df.withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(schema_dict[parameterCode], df["Sample Measurement"].cast(DoubleType()))
+    df = df.withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(schema_dict[parameterCode], df["Sample Measurement"].cast(DoubleType())).withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
 
 
     if df_join == None:
         df_join = df
     else:
-        df_join = df_join.join(df, ["state_name",'county_name','Latitude','Longitude','Date_GMT','Time_GMT'],"outer")
+        df_join = df_join.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
 
 
 df_join.write.format('jdbc').options(
