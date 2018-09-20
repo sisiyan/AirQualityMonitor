@@ -6,6 +6,8 @@ from pyspark.sql.types import StringType
 from pyspark import SparkConf, SparkContext, SQLContext
 from boto.s3.connection import S3Connection
 from pyspark.sql.types import *
+import functools
+
 
 sc = SparkContext()
 sqlContext = SQLContext(sc)
@@ -81,6 +83,8 @@ def get_file_list_perParameter(bucket_name, target_Code):
 
     return [f[0] for f in file_list]
 
+def unionAll(dataframe_list):
+    return functools.reduce(lambda df1,df2: df1.union(df2.select(df1.columns)), dataframe_list)
 
 temperature_files = get_file_list_perParameter("sy-insight-epa-data", "TEMP")
 wind_files = get_file_list_perParameter("sy-insight-epa-data", "WIND")
@@ -88,13 +92,22 @@ pressure_files = get_file_list_perParameter("sy-insight-epa-data", "PRESS")
 RHDP_files = get_file_list_perParameter("sy-insight-epa-data", "RH_DP")
 
 print temperature_files
-print wind_files
-print pressure_files
-print RHDP_files
+# print wind_files
+# print pressure_files
+# print RHDP_files
 
 temperature_df = None
+
+for fname in temperature_files:
+    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
+    df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
+    if temperature_df == None:
+        temperature_df = df
+    else:
+        temperature_df = temperature_df.union(df)
+    print temperature_df.count()
+
+
 wind_df = None
 pressure_df = None
 RHDP_df = None
-
-#for fname in temperature_files:
