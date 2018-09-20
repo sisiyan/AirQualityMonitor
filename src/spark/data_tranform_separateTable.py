@@ -105,9 +105,9 @@ for fname in temperature_files:
         temperature_df = df
     else:
         temperature_df = temperature_df.union(df)
-temperature_df2 = temperature_df.withColumnRenamed("Sample Measurement", "temperature").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
+temperature_df = temperature_df.withColumnRenamed("Sample Measurement", "temperature").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
 
-#temperature_df = temperature_df2.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("temperature", df["temperature"].cast(DoubleType()))
+#temperature_df = temperature_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("temperature", df["temperature"].cast(DoubleType()))
 
 wind_files = ["hourly_WIND_1997.csv", "hourly_WIND_1998.csv","hourly_WIND_1999.csv"]
 wind_df = None
