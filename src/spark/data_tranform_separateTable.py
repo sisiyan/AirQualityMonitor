@@ -145,11 +145,12 @@ for fname in RHDP_files:
 RHDP_df = RHDP_df.withColumnRenamed("Sample Measurement", "RH_dewpoint").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
 #RHDP_df = RHDP_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("RH_dewpoint", df["RH_dewpoint"].cast(DoubleType()))
 
+print pressure_df
 #most import weather parameters, large size
-temp_join_wind = temperature_df.join(wind_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
-temp_join_wind_pressure = temp_join_wind.join(pressure_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"left")
+#temp_join_wind = temperature_df.join(wind_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
+#temp_join_wind_pressure = temp_join_wind.join(pressure_df, temp_join_wind.state_name==pressure_df.state_name,'county_name','latitude','longitude','Date_GMT','Time_GMT'],"left")
 #weather_join = temp_join_wind.join(pressure_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT']).join(RHDP_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'])
 
-print temp_join_wind_pressure
+#print temp_join_wind_pressure
 # weather_join.write.csv('weather_join_1997to1999.csv')
 # print weather_join.count()
