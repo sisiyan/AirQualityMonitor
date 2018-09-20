@@ -147,7 +147,7 @@ RHDP_df = RHDP_df.withColumnRenamed("Sample Measurement", "RH_dewpoint").withCol
 
 #most import weather parameters, large size
 temp_join_wind = temperature_df.join(wind_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
-temp_join_wind_pressure = temp_join_wind.join(pressure_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'])
+temp_join_wind_pressure = temp_join_wind.join(pressure_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"left")
 #weather_join = temp_join_wind.join(pressure_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT']).join(RHDP_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'])
 
 print temp_join_wind_pressure
