@@ -149,5 +149,6 @@ RHDP_df = RHDP_df.withColumnRenamed("Sample Measurement", "RH_dewpoint").withCol
 temp_join_wind = temperature_df.join(wind_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
 weather_join = temp_join_wind.join(pressure_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT']).join(RHDP_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'])
 
-weather_join.write.csv('weather_join_1997to1999.csv')
-print weather_join.count()
+print weather_join
+# weather_join.write.csv('weather_join_1997to1999.csv')
+# print weather_join.count()
