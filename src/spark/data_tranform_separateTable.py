@@ -106,47 +106,47 @@ for fname in temperature_files:
     else:
         temperature_df = temperature_df.union(df)
 temperature_df = temperature_df.withColumnRenamed("Sample Measurement", "temperature").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
-temperature_df = temperature_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("temperature", df["temperature"].cast(DoubleType()))
+#temperature_df = temperature_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("temperature", df["temperature"].cast(DoubleType()))
 
-wind_files = ["hourly_WIND_1997.csv", "hourly_WIND_1998.csv","hourly_WIND_1999.csv"]
-wind_df = None
-for fname in wind_files:
-    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
-    df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
-    if wind_df == None:
-        wind_df = df
-    else:
-        wind_df = wind_df.union(df)
-wind_df = wind_df.withColumnRenamed("Sample Measurement", "winds").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
-wind_df = wind_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("winds", df["winds"].cast(DoubleType()))
-
-pressure_files = ["hourly_PRESS_1997.csv", "hourly_PRESS_1998.csv","hourly_PRESS_1999.csv"]
-pressure_df = None
-for fname in pressure_files:
-    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
-    df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
-    if pressure_df == None:
-        pressure_df = df
-    else:
-        pressure_df = pressure_df.union(df)
-pressure_df = wind_df.withColumnRenamed("Sample Measurement", "pressure").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
-pressure_df = wind_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("pressure", df["pressure"].cast(DoubleType()))
-
-RHDP_files = ["hourly_RH_DP_1997.csv", "hourly_RH_DP_1998.csv","hourly_RH_DP_1999.csv"]
-RHDP_df = None
-for fname in RHDP_files:
-    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
-    df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
-    if RHDP_df == None:
-        RHDP_df = df
-    else:
-        RHDP_df = RHDP_df.union(df)
-RHDP_df = RHDP_df.withColumnRenamed("Sample Measurement", "RH_dewpoint").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
-RHDP_df = RHDP_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("RH_dewpoint", df["RH_dewpoint"].cast(DoubleType()))
-
-#most import weather parameters, large size
-temp_join_wind = temperature_df.join(wind_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
-weather_join = temp_join_wind.join(pressure_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT']).join(RHDP_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'])
-
-weather_join.write.csv('weather_join_1997to1999.csv')
-print weather_join.count()
+# wind_files = ["hourly_WIND_1997.csv", "hourly_WIND_1998.csv","hourly_WIND_1999.csv"]
+# wind_df = None
+# for fname in wind_files:
+#     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
+#     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
+#     if wind_df == None:
+#         wind_df = df
+#     else:
+#         wind_df = wind_df.union(df)
+# wind_df = wind_df.withColumnRenamed("Sample Measurement", "winds").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
+# wind_df = wind_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("winds", df["winds"].cast(DoubleType()))
+#
+# pressure_files = ["hourly_PRESS_1997.csv", "hourly_PRESS_1998.csv","hourly_PRESS_1999.csv"]
+# pressure_df = None
+# for fname in pressure_files:
+#     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
+#     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
+#     if pressure_df == None:
+#         pressure_df = df
+#     else:
+#         pressure_df = pressure_df.union(df)
+# pressure_df = wind_df.withColumnRenamed("Sample Measurement", "pressure").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
+# pressure_df = wind_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("pressure", df["pressure"].cast(DoubleType()))
+#
+# RHDP_files = ["hourly_RH_DP_1997.csv", "hourly_RH_DP_1998.csv","hourly_RH_DP_1999.csv"]
+# RHDP_df = None
+# for fname in RHDP_files:
+#     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
+#     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
+#     if RHDP_df == None:
+#         RHDP_df = df
+#     else:
+#         RHDP_df = RHDP_df.union(df)
+# RHDP_df = RHDP_df.withColumnRenamed("Sample Measurement", "RH_dewpoint").withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
+# RHDP_df = RHDP_df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn("RH_dewpoint", df["RH_dewpoint"].cast(DoubleType()))
+#
+# #most import weather parameters, large size
+# temp_join_wind = temperature_df.join(wind_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
+# weather_join = temp_join_wind.join(pressure_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT']).join(RHDP_df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'])
+#
+# weather_join.write.csv('weather_join_1997to1999.csv')
+# print weather_join.count()
