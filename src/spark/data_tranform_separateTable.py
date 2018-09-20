@@ -96,7 +96,7 @@ print temperature_files
 # print pressure_files
 # print RHDP_files
 
-temperature_files = [hourly_TEMP_1997.csv, hourly_TEMP_1998.csv,hourly_TEMP_1999.csv]
+temperature_files = ["hourly_TEMP_1997.csv", "hourly_TEMP_1998.csv","hourly_TEMP_1999.csv"]
 temperature_df = None
 for fname in temperature_files:
     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
