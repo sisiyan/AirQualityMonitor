@@ -104,7 +104,7 @@ for fname in files_year:
     if parameterCode in particulates_codes:
         particulates_files.append(fname)
 
-weather_files = ['hourly_TEMP_1999.csv', 'hourly_PRESS_1999.csv']
+#weather_files = ['hourly_TEMP_1999.csv', 'hourly_PRESS_1999.csv']
 
 df_join_weather = None
 for fname in weather_files:
