@@ -125,7 +125,6 @@ for fname in weather_files:
         df_join_weather = df
     else:
         df_join_weather = df_join_weather.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
-        print df_join_weather.count()
 
 
-print df_join_weather.take(10)
+print df_join_weather.count()
