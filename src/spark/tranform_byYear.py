@@ -17,6 +17,11 @@ weather_codes = ['WIND','TEMP','PRESS','RH_DP']
 gases_codes = ['44201', '42401','42101','42602']
 particulates_codes = ['88101','88502','81102']
 
+#define the parameter code list
+parameter_codes = ['44201', '42401','42101','42602','88101','88502','81102',
+    'SPEC','PM10SPEC','WIND','TEMP','PRESS','RH_DP']
+
+
 def convert_to_int(string):
     '''
     Returns an integer if it can or returns None otherwise
