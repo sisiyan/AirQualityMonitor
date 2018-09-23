@@ -97,6 +97,7 @@ for fname in files_year:
     if parameterCode in particulates_codes:
         particulates_files.append(fname)
 
+files_year = ['hourly_TEMP_1999.csv', 'hourly_PRESS_1999.csv']
 
 df_join_weather = None
 for fname in weather_files:
@@ -115,3 +116,4 @@ for fname in weather_files:
         df_join_weather = df_join_weather.join(df, ["Site Num",'Date GMT','Time GMT'],"outer")
 
 print df_join_weather.count()
+print df_join_weather.take(10)
