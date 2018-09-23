@@ -24,8 +24,8 @@ parameter_codes = ['44201', '42401','42101','42602','88101','88502','81102',
 #define the dictionary map the file names to schema column names
 schema_dict = {
     '44201': "ozone", '42401': "SO2",'42101':"CO",'42602':"NO2",
-    '88101': "PM2.5_FRM",'88502':"PM2.5_nonFRM",'81102':"PM10_mass",
-    'SPEC':"PM2.5_speciation",'PM10SPEC': "PM10_speciation",
+    '88101': "PM2point5_FRM",'88502':"PM2point5_nonFRM",'81102':"PM10_mass",
+    'SPEC':"PM2point5_speciation",'PM10SPEC': "PM10_speciation",
     'WIND':"winds",'TEMP':"temperature",'PRESS':"pressure",'RH_DP':"RH_dewpoint"
 }
 
