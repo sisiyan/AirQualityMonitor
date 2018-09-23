@@ -126,7 +126,7 @@ for fname in weather_files:
         df_join_weather = df
     else:
         df_join_weather = df_join_weather.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
-"""
+
 
 df_join_gases = None
 for fname in gases_files:
@@ -142,5 +142,21 @@ for fname in gases_files:
         df_join_gases = df
     else:
         df_join_gases = df_join_gases.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
+"""
 
-print "Number of rows after outer join" + str(df_join_gases.count())
+df_join_particulates = None
+for fname in particulates_files:
+    year,parameterCode = file_year_paraCode(fname)
+    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
+
+    df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement','MDL')
+    parameter = schema_dict[parameterCode]
+    df = df.withColumnRenamed("Sample Measurement", parameter).withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
+    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType()))
+
+    if df_join_particulates == None:
+        df_join_particulates = df
+    else:
+        df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
+
+print "Number of rows after outer join" + str(df_join_particulates.count())
