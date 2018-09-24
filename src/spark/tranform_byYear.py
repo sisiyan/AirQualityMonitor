@@ -167,11 +167,11 @@ split_date = functions.split(df_join_gases_weather['Date_GMT'], '-')
 df_join_gases_weather = df_join_gases_weather.withColumn('GMT_year', split_date.getItem(0))
 df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date.getItem(1))
 df_join_gases_weather = df_join_gases_weather.withColumn('GMT_day', split_date.getItem(2))
-df_join_gases_weather = df_join_gases_weather.withColumn("Date_GMT", df_join_gases_weather["Date_GMT"].cast(DateType()))
+df_join_gases_weather = df_join_gases_weather.withColumn("Date_GMT", df_join_gases_weather["Date_GMT"].cast(DateType())).withColumn("Time_GMT", df_join_gases_weather["Time_GMT"].cast(TimestampType()))
 
 
 #" And number of null values: " + str(df_join_gases_weather.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in df_join_gases_weather.columns]).show())
-df_join_gases_weather.write.csv('gases_weather_join_1999.csv', header = True)
+#df_join_gases_weather.write.csv('gases_weather_join_1999.csv', header = True)
 print df_join_gases_weather
 
 """
