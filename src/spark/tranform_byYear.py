@@ -229,7 +229,7 @@ df_join_gases_weather.write\
     .option("dbtable", "Gases_Weather_Join")\
     .option("user", "root")\
     .option("password", "ys8586dswfye") \
-    .mode('overwrite')\
+    .mode('append')\
     .save()
 
 df_join_particulates_weather.write\
@@ -239,5 +239,5 @@ df_join_particulates_weather.write\
     .option("dbtable", "Particulates_Weather_Join")\
     .option("user", "root")\
     .option("password", "ys8586dswfye") \
-    .mode('overwrite')\
+    .mode('append')\
     .save()
