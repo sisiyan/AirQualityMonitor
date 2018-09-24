@@ -137,14 +137,14 @@ for fname in gases_files:
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement','MDL')
     parameter = schema_dict[parameterCode]
     df = df.withColumnRenamed("Sample Measurement", parameter).withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
-    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType()))
+    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType())).withColumn(parameter+"MDL", df['MDL'].cast(DoubleType()))
 
     if df_join_gases == None:
         df_join_gases = df
     else:
         df_join_gases = df_join_gases.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
 
-
+"""
 df_join_particulates = None
 for fname in particulates_files:
     year,parameterCode = file_year_paraCode(fname)
@@ -153,13 +153,13 @@ for fname in particulates_files:
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement','MDL')
     parameter = schema_dict[parameterCode]
     df = df.withColumnRenamed("Sample Measurement", parameter).withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
-    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType()))
+    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType())).withColumn(parameter+"MDL", df['MDL'].cast(DoubleType()))
 
     if df_join_particulates == None:
         df_join_particulates = df
     else:
         df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
-
+"""
 
 df_join_gases_weather = df_join_weather.join(df_join_gases, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'], "inner")
 split_date = functions.split(df_join_gases_weather['Date_GMT'], '-')
@@ -168,7 +168,7 @@ df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date
 df_join_gases_weather = df_join_gases_weather.withColumn('GMT_day', split_date.getItem(2))
 df_join_gases_weather = df_join_gases_weather.withColumn("Date_GMT", df_join_gases_weather["Date_GMT"].cast(DateType()))
 
-print "Number of rows after inner join " + str(df_join_gases_weather.count())
+print df_join_gases_weather
 #" And number of null values: " + str(df_join_gases_weather.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in df_join_gases_weather.columns]).show())
 df_join_gases_weather.write.csv('gases_weather_join_1999.csv')
 
