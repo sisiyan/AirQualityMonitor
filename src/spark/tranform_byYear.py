@@ -170,6 +170,8 @@ df_join_gases_weather = df_join_gases_weather.withColumn("Date_GMT", df_join_gas
 
 print "Number of rows after inner join " + str(df_join_gases_weather.count())
 #" And number of null values: " + str(df_join_gases_weather.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in df_join_gases_weather.columns]).show())
+df_join_gases_weather.write.csv('gases_weather_join_1999.csv')
+
 
 """
 df_join_gases_weather.write\
