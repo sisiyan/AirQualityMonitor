@@ -90,7 +90,7 @@ def get_file_list_perYear(bucket_name, target_year):
     return [f[0] for f in file_list]
 
 
-files_year = get_file_list_perYear("sy-insight-epa-data", 1999)
+files_year = get_file_list_perYear("sy-insight-epa-data", 1980)
 print files_year
 
 weather_files = []
@@ -219,22 +219,25 @@ df_join_particulates_weather = df_join_particulates_weather\
     .withColumn('GMT_year', df_join_particulates_weather['GMT_year'].cast(IntegerType()))\
     .withColumn('GMT_month', df_join_particulates_weather['GMT_month'].cast(IntegerType()))\
     .withColumn('GMT_day', df_join_particulates_weather['GMT_day'].cast(IntegerType()))
-#" And number of null values: " + str(df_join_gases_weather.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in df_join_gases_weather.columns]).show())
-#df_join_gases_weather.write.csv('gases_weather_join_1999.csv', header = True)
-print df_join_particulates_weather
 
-"""
+
+
 df_join_gases_weather.write\
     .format("jdbc")\
     .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
     .option("driver", "com.mysql.jdbc.Driver")\
-    .option("dbtable", "testTable")\
+    .option("dbtable", "Gases_Weather_Join")\
     .option("user", "root")\
     .option("password", "ys8586dswfye") \
-    .mode('append')\
+    .mode('overwrite')\
     .save()
 
-
-df_join_particulates_weather = df_join_weather.join(df_join_particulates, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'], "inner")
-print "Number of rows after inner join " + str(df_join_particulates_weather.count())
-"""
+df_join_particulates_weather.write\
+    .format("jdbc")\
+    .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
+    .option("driver", "com.mysql.jdbc.Driver")\
+    .option("dbtable", "Particulates_Weather_Join")\
+    .option("user", "root")\
+    .option("password", "ys8586dswfye") \
+    .mode('overwrite')\
+    .save()
