@@ -23,14 +23,53 @@ PRIMARY KEY (unit_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE Gases_Weather_Join (
-unit_id int NOT NULL AUTO_INCREMENT,
+gases_record_id int NOT NULL AUTO_INCREMENT,
 state_name varchar(20) NOT NULL,
 county_name varchar(20) NOT NULL,
 latitude float(8,6) NOT NULL,
 longitude float(8,5) NOT NULL,
-Date_GMT DATE NOT NULL,
-Time_GMT timestamp NOT NULL,
+date_GMT DATE NOT NULL,
+time_GMT timestamp NOT NULL,
 pressure double NULL,
-RH_dewpoint
-PRIMARY KEY (unit_id)
+relative_humidity double NULL,
+temperature double NULL,
+winds double NULL,
+CO double NULL,
+CO_MDL double NULL,
+SO2 double NULL,
+SO2_MDL double NULL,
+NO2 double NULL,
+NO2_MDL double NULL,
+ozone double NULL,
+ozone_MDL double NULL,
+GMT_year int NOT NULL,
+GMT_month int NOT NULL,
+GMT_day int NOT NULL,
+PRIMARY KEY (gases_record_id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE Gases_Weather_Join (
+gases_record_id int NOT NULL AUTO_INCREMENT,
+state_name varchar(20) NOT NULL,
+county_name varchar(20) NOT NULL,
+latitude float(8,6) NOT NULL,
+longitude float(8,5) NOT NULL,
+date_GMT DATE NOT NULL,
+time_GMT timestamp NOT NULL,
+pressure double NULL,
+relative_humidity double NULL,
+temperature double NULL,
+winds double NULL,
+CO double NULL,
+CO_MDL double NULL,
+SO2 double NULL,
+SO2_MDL double NULL,
+NO2 double NULL,
+NO2_MDL double NULL,
+ozone double NULL,
+ozone_MDL double NULL,
+GMT_year int NOT NULL,
+GMT_month int NOT NULL,
+GMT_day int NOT NULL,
+PRIMARY KEY (gases_record_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

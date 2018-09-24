@@ -164,22 +164,35 @@ for fname in gases_files:
         df_join_gases = df_join_gases\
             .join(df, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'],"outer")
 
-"""
+
 df_join_particulates = None
 for fname in particulates_files:
     year,parameterCode = file_year_paraCode(fname)
-    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true').load('s3a://sy-insight-epa-data/'+fname)
+
+    if parameterCode == 'SPEC' or parameterCode == 'PM10SPEC':
+        continue
+
+    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
+            .load('s3a://sy-insight-epa-data/'+fname)
 
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement','MDL')
     parameter = schema_dict[parameterCode]
-    df = df.withColumnRenamed("Sample Measurement", parameter).withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
-    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType())).withColumn(parameter+"MDL", df['MDL'].cast(DoubleType()))
-
+    parameter_MDL = parameter + "_MDL"
+    df = df.withColumnRenamed("Sample Measurement", parameter)\
+        .withColumnRenamed("State Name", "state_name")\
+        .withColumnRenamed("County Name", "county_name")\
+        .withColumnRenamed("Date GMT", "date_GMT")\
+        .withColumnRenamed("Time GMT", "time_GMT")\
+        .withColumnRenamed("MDL", parameter_MDL)
+    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType()))\
+        .withColumn("longitude", df["Longitude"].cast(DoubleType()))\
+        .withColumn(parameter, df[parameter].cast(DoubleType()))\
+        .withColumn(parameter_MDL, df[parameter_MDL].cast(DoubleType()))
     if df_join_particulates == None:
         df_join_particulates = df
     else:
-        df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
-"""
+        df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'],"outer")
+
 
 df_join_gases_weather = df_join_weather\
                         .join(df_join_gases, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'], "inner")
@@ -194,10 +207,21 @@ df_join_gases_weather = df_join_gases_weather\
     .withColumn('GMT_month', df_join_gases_weather['GMT_month'].cast(IntegerType()))\
     .withColumn('GMT_day', df_join_gases_weather['GMT_day'].cast(IntegerType()))
 
-
+df_join_particulates_weather = df_join_weather\
+                        .join(df_join_particulates, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'], "inner")
+split_date = functions.split(df_join_particulates_weather['date_GMT'], '-')
+df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_year', split_date.getItem(0))
+df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_month', split_date.getItem(1))
+df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_day', split_date.getItem(2))
+df_join_particulates_weather = df_join_particulates_weather\
+    .withColumn("date_GMT", df_join_particulates_weather["date_GMT"].cast(DateType()))\
+    .withColumn("time_GMT", df_join_particulates_weather["time_GMT"].cast(TimestampType()))\
+    .withColumn('GMT_year', df_join_particulates_weather['GMT_year'].cast(IntegerType()))\
+    .withColumn('GMT_month', df_join_particulates_weather['GMT_month'].cast(IntegerType()))\
+    .withColumn('GMT_day', df_join_particulates_weather['GMT_day'].cast(IntegerType()))
 #" And number of null values: " + str(df_join_gases_weather.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in df_join_gases_weather.columns]).show())
 #df_join_gases_weather.write.csv('gases_weather_join_1999.csv', header = True)
-print df_join_gases_weather
+print df_join_particulates_weather
 
 """
 df_join_gases_weather.write\
