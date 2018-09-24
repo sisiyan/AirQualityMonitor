@@ -29,7 +29,8 @@ county_name varchar(20) NOT NULL,
 latitude float(8,6) NOT NULL,
 longitude float(8,5) NOT NULL,
 Date_GMT DATE NOT NULL,
-Time_GMT TIME NOT NULL,
-
+Time_GMT timestamp NOT NULL,
+pressure double NULL,
+RH_dewpoint
 PRIMARY KEY (unit_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

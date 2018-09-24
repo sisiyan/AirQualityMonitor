@@ -27,7 +27,7 @@ schema_dict = {
     '44201': "ozone", '42401': "SO2",'42101':"CO",'42602':"NO2",
     '88101': "PM2point5_FRM",'88502':"PM2point5_nonFRM",'81102':"PM10_mass",
     'SPEC':"PM2point5_speciation",'PM10SPEC': "PM10_speciation",
-    'WIND':"winds",'TEMP':"temperature",'PRESS':"pressure",'RH_DP':"RH_dewpoint"
+    'WIND':"winds",'TEMP':"temperature",'PRESS':"pressure",'RH_DP':"Relative_Humidity"
 }
 
 def convert_to_int(string):
@@ -164,9 +164,9 @@ for fname in particulates_files:
 
 df_join_gases_weather = df_join_weather.join(df_join_gases, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'], "inner")
 split_date = functions.split(df_join_gases_weather['Date_GMT'], '-')
-df_join_gases_weather = df_join_gases_weather.withColumn('GMT_year', split_date.getItem(0))
-df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date.getItem(1))
-df_join_gases_weather = df_join_gases_weather.withColumn('GMT_day', split_date.getItem(2))
+df_join_gases_weather = df_join_gases_weather.withColumn('GMT_year', split_date.getItem(0)).withColumn('GMT_year', df_join_gases_weather['GMT_year'].cast(DateType()))
+df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date.getItem(1)).withColumn('GMT_month', df_join_gases_weather['GMT_month'].cast(DateType()))
+df_join_gases_weather = df_join_gases_weather.withColumn('GMT_day', split_date.getItem(2)).withColumn('GMT_day', df_join_gases_weather['GMT_day'].cast(DateType()))
 df_join_gases_weather = df_join_gases_weather.withColumn("Date_GMT", df_join_gases_weather["Date_GMT"].cast(DateType())).withColumn("Time_GMT", df_join_gases_weather["Time_GMT"].cast(TimestampType()))
 
 
