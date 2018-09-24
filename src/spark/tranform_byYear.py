@@ -136,8 +136,9 @@ for fname in gases_files:
 
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement','MDL')
     parameter = schema_dict[parameterCode]
-    df = df.withColumnRenamed("Sample Measurement", parameter).withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT")
-    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType())).withColumn(parameter+"_MDL", df['MDL'].cast(DoubleType()))
+    parameter_MDL = parameter + "_MDL"
+    df = df.withColumnRenamed("Sample Measurement", parameter).withColumnRenamed("State Name", "state_name").withColumnRenamed("County Name", "county_name").withColumnRenamed("Date GMT", "Date_GMT").withColumnRenamed("Time GMT", "Time_GMT").withColumnRenamed("MDL", parameter_MDL)
+    df = df.withColumn("latitude", df["Latitude"].cast(DoubleType())).withColumn("longitude", df["Longitude"].cast(DoubleType())).withColumn(parameter, df[parameter].cast(DoubleType())).withColumn(parameter_MDL, df[parameter_MDL].cast(DoubleType()))
 
     if df_join_gases == None:
         df_join_gases = df
