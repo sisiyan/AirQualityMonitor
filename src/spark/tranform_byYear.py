@@ -10,6 +10,7 @@ from pyspark.sql.types import StringType
 from pyspark import SparkConf, SparkContext, SQLContext
 from boto.s3.connection import S3Connection
 from pyspark.sql.types import *
+from pyspark.sql import functions
 
 sc = SparkContext()
 sqlContext = SQLContext(sc)
@@ -106,7 +107,7 @@ for fname in files_year:
 
 #weather_files = ['hourly_TEMP_1999.csv', 'hourly_PRESS_1999.csv']
 
-"""
+
 df_join_weather = None
 for fname in weather_files:
     year,parameterCode = file_year_paraCode(fname)
@@ -142,7 +143,7 @@ for fname in gases_files:
         df_join_gases = df
     else:
         df_join_gases = df_join_gases.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
-"""
+
 
 df_join_particulates = None
 for fname in particulates_files:
@@ -159,4 +160,28 @@ for fname in particulates_files:
     else:
         df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'],"outer")
 
-print "Number of rows after outer join" + str(df_join_particulates.count())
+
+df_join_gases_weather = df_join_weather.join(df_join_gases, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'], "inner")
+split_date = functions.split(df_join_gases_weather['Date_GMT'], '-')
+df_join_gases_weather = df_join_gases_weather.withColumn('GMT_year', split_date.getItem(0))
+df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date.getItem(1))
+df_join_gases_weather = df_join_gases_weather.withColumn('GMT_day', split_date.getItem(2))
+df_join_gases_weather = df_join_gases_weather.withColumn("Date_GMT", df_join_gases_weather["Date_GMT"].cast(DateType()))
+
+print "Number of rows after inner join " + str(df_join_gases_weather.count()) + " And number of null values: " + str(df_join_gases_weather.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in df_join_gases_weather.columns]).show())
+
+"""
+df_join_gases_weather.write\
+    .format("jdbc")\
+    .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
+    .option("driver", "com.mysql.jdbc.Driver")\
+    .option("dbtable", "testTable")\
+    .option("user", "root")\
+    .option("password", "ys8586dswfye") \
+    .mode('append')\
+    .save()
+
+
+df_join_particulates_weather = df_join_weather.join(df_join_particulates, ["state_name",'county_name','latitude','longitude','Date_GMT','Time_GMT'], "inner")
+print "Number of rows after inner join " + str(df_join_particulates_weather.count())
+"""
