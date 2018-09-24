@@ -11,6 +11,8 @@ from pyspark import SparkConf, SparkContext, SQLContext
 from boto.s3.connection import S3Connection
 from pyspark.sql.types import *
 from pyspark.sql import functions
+import datetime
+import time
 
 sc = SparkContext()
 sqlContext = SQLContext(sc)
@@ -202,7 +204,7 @@ df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date
 df_join_gases_weather = df_join_gases_weather.withColumn('GMT_day', split_date.getItem(2))
 df_join_gases_weather = df_join_gases_weather\
     .withColumn("date_GMT", df_join_gases_weather["date_GMT"].cast(DateType()))\
-    .withColumn("time_GMT", df_join_gases_weather["time_GMT"].cast(TimestampType()))\
+    .withColumn("time_GMT", df_join_gases_weather["time_GMT"].cast(IntegerType()))\
     .withColumn('GMT_year', df_join_gases_weather['GMT_year'].cast(IntegerType()))\
     .withColumn('GMT_month', df_join_gases_weather['GMT_month'].cast(IntegerType()))\
     .withColumn('GMT_day', df_join_gases_weather['GMT_day'].cast(IntegerType()))
@@ -215,7 +217,7 @@ df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_mont
 df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_day', split_date.getItem(2))
 df_join_particulates_weather = df_join_particulates_weather\
     .withColumn("date_GMT", df_join_particulates_weather["date_GMT"].cast(DateType()))\
-    .withColumn("time_GMT", df_join_particulates_weather["time_GMT"].cast(TimestampType()))\
+    .withColumn("time_GMT", df_join_particulates_weather["time_GMT"].cast(IntegerType()))\
     .withColumn('GMT_year', df_join_particulates_weather['GMT_year'].cast(IntegerType()))\
     .withColumn('GMT_month', df_join_particulates_weather['GMT_month'].cast(IntegerType()))\
     .withColumn('GMT_day', df_join_particulates_weather['GMT_day'].cast(IntegerType()))
