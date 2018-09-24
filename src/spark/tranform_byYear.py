@@ -169,10 +169,10 @@ df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date
 df_join_gases_weather = df_join_gases_weather.withColumn('GMT_day', split_date.getItem(2))
 df_join_gases_weather = df_join_gases_weather.withColumn("Date_GMT", df_join_gases_weather["Date_GMT"].cast(DateType()))
 
-print df_join_gases_weather
-#" And number of null values: " + str(df_join_gases_weather.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in df_join_gases_weather.columns]).show())
-df_join_gases_weather.write.csv('gases_weather_join_1999.csv')
 
+#" And number of null values: " + str(df_join_gases_weather.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in df_join_gases_weather.columns]).show())
+df_join_gases_weather.write.csv('gases_weather_join_1999.csv', header = True)
+print df_join_gases_weather
 
 """
 df_join_gases_weather.write\
