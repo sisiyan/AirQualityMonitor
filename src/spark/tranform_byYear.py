@@ -114,7 +114,7 @@ df_join_weather = None
 for fname in weather_files:
     year,parameterCode = file_year_paraCode(fname)
     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
-            .load('s3a://sy-insight-epa-data/'+fname)
+            .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
 
     if parameterCode == "RH_DP":
         fdata = fdata.filter(fdata["Parameter Name"] == "Relative Humidity ")
@@ -144,7 +144,8 @@ for fname in gases_files:
     year,parameterCode = file_year_paraCode(fname)
     fdata = sqlContext.read.format('com.databricks.spark.csv')\
             .option('header', 'true')\
-            .load('s3a://sy-insight-epa-data/'+fname)
+            .load('s3a://sy-insight-epa-data/'+fname)\
+            .dropDuplicates()
 
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement','MDL')
     parameter = schema_dict[parameterCode]
@@ -175,7 +176,7 @@ for fname in particulates_files:
         continue
 
     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
-            .load('s3a://sy-insight-epa-data/'+fname)
+            .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
 
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement','MDL')
     parameter = schema_dict[parameterCode]
