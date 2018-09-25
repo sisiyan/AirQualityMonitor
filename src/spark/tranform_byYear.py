@@ -208,7 +208,6 @@ df_join_gases_weather = df_join_gases_weather.withColumn('time_GMT', split_time.
 
 df_join_gases_weather = df_join_gases_weather\
     .withColumn("date_GMT", df_join_gases_weather["date_GMT"].cast(DateType()))\
-    .withColumn("time_GMT", df_join_gases_weather["time_GMT"].cast(TimestampType()))\
     .withColumn('GMT_year', df_join_gases_weather['GMT_year'].cast(IntegerType()))\
     .withColumn('GMT_month', df_join_gases_weather['GMT_month'].cast(IntegerType()))\
     .withColumn('GMT_day', df_join_gases_weather['GMT_day'].cast(IntegerType()))
@@ -224,7 +223,6 @@ df_join_particulates_weather = df_join_particulates_weather.withColumn('time_GMT
 
 df_join_particulates_weather = df_join_particulates_weather\
     .withColumn("date_GMT", df_join_particulates_weather["date_GMT"].cast(DateType()))\
-    .withColumn("time_GMT", df_join_particulates_weather["time_GMT"].cast(TimestampType()))\
     .withColumn('GMT_year', df_join_particulates_weather['GMT_year'].cast(IntegerType()))\
     .withColumn('GMT_month', df_join_particulates_weather['GMT_month'].cast(IntegerType()))\
     .withColumn('GMT_day', df_join_particulates_weather['GMT_day'].cast(IntegerType()))
