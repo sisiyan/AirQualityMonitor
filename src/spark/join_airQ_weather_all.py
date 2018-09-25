@@ -139,7 +139,7 @@ for yr in range(1980, 1981):
             df_join_weather = df
         else:
             df_join_weather = df_join_weather\
-                .join(df, ['latitude','longitude','date_GMT','time_GMT'],"outer")
+                .join(df, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'],"outer")
 
     # Outer join all gasese pollutant data
     df_join_gases = None
@@ -168,7 +168,7 @@ for yr in range(1980, 1981):
             df_join_gases = df
         else:
             df_join_gases = df_join_gases\
-                .join(df, ['latitude','longitude','date_GMT','time_GMT'],"outer")
+                .join(df, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'],"outer")
 
     # Outer join all particulate pollutant data
     df_join_particulates = None
@@ -197,11 +197,11 @@ for yr in range(1980, 1981):
         if df_join_particulates == None:
             df_join_particulates = df
         else:
-            df_join_particulates = df_join_particulates.join(df, ['latitude','longitude','date_GMT','time_GMT'],"outer")
+            df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'],"outer")
 
     # Inner join the weather data and gas pollutant data
     df_join_gases_weather = df_join_weather\
-                            .join(df_join_gases, ['latitude','longitude','date_GMT','time_GMT'], "inner")
+                            .join(df_join_gases, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'], "inner")
     split_date = functions.split(df_join_gases_weather['date_GMT'], '-')
     df_join_gases_weather = df_join_gases_weather.withColumn('GMT_year', split_date.getItem(0))
     df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date.getItem(1))
@@ -218,7 +218,7 @@ for yr in range(1980, 1981):
 
     # Inner join the weather data and particulate pollutant data
     df_join_particulates_weather = df_join_weather\
-                            .join(df_join_particulates, ['latitude','longitude','date_GMT','time_GMT'], "inner")
+                            .join(df_join_particulates, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'], "inner")
     split_date = functions.split(df_join_particulates_weather['date_GMT'], '-')
     df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_year', split_date.getItem(0))
     df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_month', split_date.getItem(1))
