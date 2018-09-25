@@ -93,7 +93,7 @@ def get_file_list_perYear(bucket_name, target_year):
 
 
 #Process year by year
-for yr in range(1980, 1981):
+for yr in range(1981, 2018):
 
     files_year = get_file_list_perYear("sy-insight-epa-data", yr)
 
