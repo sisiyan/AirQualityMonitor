@@ -91,10 +91,13 @@ def get_file_list_perYear(bucket_name, target_year):
 
     return [f[0] for f in file_list]
 
+
+#Process year by year
 for yr in range(1980, 1981):
 
     files_year = get_file_list_perYear("sy-insight-epa-data", yr)
 
+    #Find file names for each type of parameter on each year
     weather_files = []
     gases_files = []
     particulates_files = []
@@ -109,7 +112,7 @@ for yr in range(1980, 1981):
 
     #weather_files = ['hourly_TEMP_1999.csv', 'hourly_PRESS_1999.csv']
 
-
+    # Outer Join weather data
     df_join_weather = None
     for fname in weather_files:
         year,parameterCode = file_year_paraCode(fname)
@@ -136,9 +139,9 @@ for yr in range(1980, 1981):
             df_join_weather = df
         else:
             df_join_weather = df_join_weather\
-                .join(df, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'],"outer")
+                .join(df, ['latitude','longitude','date_GMT','time_GMT'],"outer")
 
-
+    # Outer join all gasese pollutant data
     df_join_gases = None
     for fname in gases_files:
         year,parameterCode = file_year_paraCode(fname)
@@ -167,7 +170,7 @@ for yr in range(1980, 1981):
             df_join_gases = df_join_gases\
                 .join(df, ['latitude','longitude','date_GMT','time_GMT'],"outer")
 
-
+    # Outer join all particulate pollutant data
     df_join_particulates = None
     for fname in particulates_files:
         year,parameterCode = file_year_paraCode(fname)
@@ -196,7 +199,7 @@ for yr in range(1980, 1981):
         else:
             df_join_particulates = df_join_particulates.join(df, ['latitude','longitude','date_GMT','time_GMT'],"outer")
 
-
+    # Inner join the weather data and gas pollutant data
     df_join_gases_weather = df_join_weather\
                             .join(df_join_gases, ['latitude','longitude','date_GMT','time_GMT'], "inner")
     split_date = functions.split(df_join_gases_weather['date_GMT'], '-')
@@ -213,6 +216,7 @@ for yr in range(1980, 1981):
         .withColumn('GMT_month', df_join_gases_weather['GMT_month'].cast(IntegerType()))\
         .withColumn('GMT_day', df_join_gases_weather['GMT_day'].cast(IntegerType()))
 
+    # Inner join the weather data and particulate pollutant data
     df_join_particulates_weather = df_join_weather\
                             .join(df_join_particulates, ['latitude','longitude','date_GMT','time_GMT'], "inner")
     split_date = functions.split(df_join_particulates_weather['date_GMT'], '-')
@@ -229,7 +233,7 @@ for yr in range(1980, 1981):
         .withColumn('GMT_day', df_join_particulates_weather['GMT_day'].cast(IntegerType()))
 
 
-
+    # write the joined the weather and gas pollutant data to database
     df_join_gases_weather.write\
         .format("jdbc")\
         .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
@@ -240,6 +244,7 @@ for yr in range(1980, 1981):
         .mode('append')\
         .save()
 
+    # write the joined the weather and particulate pollutant data to database
     df_join_particulates_weather.write\
         .format("jdbc")\
         .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
