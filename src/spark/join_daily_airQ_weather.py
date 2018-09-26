@@ -115,10 +115,40 @@ def average_over_day(fname):
 
 def main():
     files_per_year = get_file_list_perYear("sy-insight-epa-data", 1980)
+    # for fname in files_per_year
     df_dailyBin = average_over_day("hourly_42101_1980.csv")
-    print df_dailyBin.show()
+    print df_dailyBin.filter(df_dailyBin["Latitude"] == 33.520661, df_dailyBin["Longitude"] == -86.801934, df_dailyBin["Date GMT"] == "1980-01-01").show()
 
+    """
     weather_files, gases_files, particulates_files = classify_files(files_per_year)
+
+    # Outer Join weather data
+    df_join_weather = None
+    for fname in weather_files:
+        year,parameterCode = file_year_paraCode(fname)
+        df = average_over_day(fname)
+
+        if parameterCode == "RH_DP":
+            fdata = fdata.filter(fdata["Parameter Name"] == "Relative Humidity ")
+        if parameterCode == "WIND":
+            fdata = fdata.filter(fdata["Parameter Code"] == "61103")
+
+        parameter = schema_dict[parameterCode]
+        df = df.withColumnRenamed("Sample Measurement", parameter)\
+            .withColumnRenamed("State Name", "state_name")\
+            .withColumnRenamed("County Name", "county_name")\
+            .withColumnRenamed("Date GMT", "date_GMT")\
+            .withColumnRenamed("Time GMT", "time_GMT")
+        df = df.withColumn("latitude", df["Latitude"].cast(DoubleType()))\
+            .withColumn("longitude", df["Longitude"].cast(DoubleType()))\
+            .withColumn(parameter, df[parameter].cast(DoubleType()))
+
+        if df_join_weather == None:
+            df_join_weather = df
+        else:
+            df_join_weather = df_join_weather\
+                .join(df, ["state_name",'county_name','latitude','longitude','date_GMT','time_GMT'],"outer")
+        """
 
 if __name__ == '__main__':
     main()
