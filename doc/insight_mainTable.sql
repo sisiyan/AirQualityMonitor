@@ -73,6 +73,20 @@ GMT_month int NOT NULL,
 GMT_day int NOT NULL,
 PRIMARY KEY (gases_record_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+CREATE INDEX idx_gases_record_id
+ON Gases_Weather_Join (gases_record_id);
+CREATE INDEX idx_state_county
+ON Gases_Weather_Join (state_name, county_name);
+CREATE INDEX idx_date
+ON Gases_Weather_Join (date_GMT);
+CREATE INDEX idx_time
+ON Gases_Weather_Join (time_GMT);
+CREATE INDEX idx_year
+ON Gases_Weather_Join (GMT_year);
+CREATE INDEX idx_month
+ON Gases_Weather_Join (GMT_month);
+
+
 
 CREATE TABLE Particulates_Weather_Join (
 particulates_record_id int NOT NULL AUTO_INCREMENT,
