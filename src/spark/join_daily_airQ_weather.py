@@ -207,6 +207,7 @@ def main():
             .withColumn("date_GMT", df_join_gases_weather["date_GMT"].cast(DateType()))\
             .withColumn('GMT_year', df_join_gases_weather['GMT_year'].cast(IntegerType()))\
             .withColumn('GMT_month', df_join_gases_weather['GMT_month'].cast(IntegerType()))
+            .dropDuplicates()
 
         # Inner join the weather data and particulate pollutant data
         df_join_particulates_weather = df_join_weather\
@@ -219,7 +220,7 @@ def main():
             .withColumn("date_GMT", df_join_particulates_weather["date_GMT"].cast(DateType()))\
             .withColumn('GMT_year', df_join_particulates_weather['GMT_year'].cast(IntegerType()))\
             .withColumn('GMT_month', df_join_particulates_weather['GMT_month'].cast(IntegerType()))
-
+            .dropDuplicates()
         print "total number of rows "+ str(df_join_gases_weather.count())
 
         # write the joined the weather and gas pollutant data to database
