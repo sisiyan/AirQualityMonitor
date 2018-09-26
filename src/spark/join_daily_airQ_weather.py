@@ -127,7 +127,7 @@ def rename_cols(df, parameter_avg):
 
 
 def main():
-    for yr in range(1981, 1991):
+    for yr in range(1991, 2001):
 
         files_per_year = get_file_list_perYear("sy-insight-epa-data", yr)
         # for fname in files_per_year
@@ -221,7 +221,7 @@ def main():
             .withColumn('GMT_year', df_join_particulates_weather['GMT_year'].cast(IntegerType()))\
             .withColumn('GMT_month', df_join_particulates_weather['GMT_month'].cast(IntegerType()))\
             .dropDuplicates()
-        print "total number of rows "+ str(df_join_gases_weather.count())
+        print "Year: "+ str(yr) + " is done."
 
         # write the joined the weather and gas pollutant data to database
         df_join_gases_weather.write\
