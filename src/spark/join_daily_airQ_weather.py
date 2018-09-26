@@ -106,9 +106,8 @@ def classify_files(files_per_year):
             particulates_files.append(fname)
     return weather_files, gases_files, particulates_files
 
-def average_over_day(fname):
-    fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
-            .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
+def average_over_day(fdata):
+
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
     df_dailyBin = df.groupby('State Name', 'County Name','Latitude','Longitude','Date GMT')\
                     .agg({'Sample Measurement': 'mean'})
@@ -140,12 +139,15 @@ def main():
     df_join_weather = None
     for fname in weather_files:
         year,parameterCode = file_year_paraCode(fname)
-        df = average_over_day(fname)
+        fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
+                .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
 
         if parameterCode == "RH_DP":
             fdata = fdata.filter(fdata["Parameter Name"] == "Relative Humidity ")
         if parameterCode == "WIND":
             fdata = fdata.filter(fdata["Parameter Code"] == "61103")
+
+        df = average_over_day(fdata)
 
         parameter_avg = schema_dict[parameterCode] + "_avg"
         df = rename_cols(df, parameter_avg)
@@ -160,7 +162,10 @@ def main():
     df_join_gases = None
     for fname in gases_files:
         year,parameterCode = file_year_paraCode(fname)
-        df = average_over_day(fname)
+        fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
+                .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
+
+        df = average_over_day(fdata)
         parameter_avg = schema_dict[parameterCode] + "_avg"
         df = rename_cols(df, parameter_avg)
 
@@ -178,7 +183,9 @@ def main():
         if parameterCode == 'SPEC' or parameterCode == 'PM10SPEC':
             continue
 
-        df = average_over_day(fname)
+        fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
+                .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
+        df = average_over_day(fdata)
         parameter_avg = schema_dict[parameterCode] + "_avg"
         df = rename_cols(df, parameter_avg)
 
