@@ -111,3 +111,41 @@ GMT_month int NOT NULL,
 GMT_day int NOT NULL,
 PRIMARY KEY (particulates_record_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE Gases_Weather_Join_Daily (
+gases_rec_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+state_name varchar(20) NOT NULL,
+county_name varchar(20) NOT NULL,
+latitude float(8,6) NOT NULL,
+longitude float(8,5) NOT NULL,
+date_GMT DATE NOT NULL,
+pressure_avg double NULL,
+relative_humidity_avg double NULL,
+temperature_avg double NULL,
+winds_avg double NULL,
+CO_avg double NULL,
+SO2_avg double NULL,
+NO2_avg double NULL,
+ozone_avg double NULL,
+GMT_year int NOT NULL,
+GMT_month int NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE Particulates_Weather_Join_Daily (
+particulates_rec_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+state_name varchar(20) NOT NULL,
+county_name varchar(20) NOT NULL,
+latitude float(8,6) NOT NULL,
+longitude float(8,5) NOT NULL,
+date_GMT DATE NOT NULL,
+pressure_avg double NULL,
+relative_humidity_avg double NULL,
+temperature_avg double NULL,
+winds_avg double NULL,
+PM10_mass double NULL,
+PM2point5_FRM double NULL,
+PM2point5_nonFRM double NULL,
+GMT_year int NOT NULL,
+GMT_month int NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
