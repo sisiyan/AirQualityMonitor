@@ -116,7 +116,7 @@ PRIMARY KEY (particulates_record_id)
 CREATE TABLE Gases_Weather_Join_Daily (
 gases_rec_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
 state_name varchar(20) NOT NULL,
-county_name varchar(20) NOT NULL,
+county_name varchar(40) NOT NULL,
 latitude float(8,6) NOT NULL,
 longitude float(8,5) NOT NULL,
 date_GMT DATE NOT NULL,
@@ -135,7 +135,7 @@ GMT_month int NOT NULL
 CREATE TABLE Particulates_Weather_Join_Daily (
 particulates_rec_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
 state_name varchar(20) NOT NULL,
-county_name varchar(20) NOT NULL,
+county_name varchar(40) NOT NULL,
 latitude float(8,6) NOT NULL,
 longitude float(8,5) NOT NULL,
 date_GMT DATE NOT NULL,
