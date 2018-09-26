@@ -115,6 +115,7 @@ def average_over_day(fname):
 
 def main():
     files_per_year = get_file_list_perYear("sy-insight-epa-data", 1980)
+    df_dailyBin = average_over_day("hourly_42101_1980.csv")
     print df_dailyBin.show()
 
     weather_files, gases_files, particulates_files = classify_files(files_per_year)
