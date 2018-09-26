@@ -110,7 +110,8 @@ def average_over_day(fname):
     fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
             .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
     df = fdata.select('State Name', 'County Name', 'Latitude','Longitude','Date GMT','Time GMT','Sample Measurement')
-    df_dailyBin = df.groupby('Latitude','Longitude','Date GMT').agg({'Sample Measurement': 'mean'})
+    df_dailyBin = df.groupby('State Name', 'County Name','Latitude','Longitude','Date GMT')\
+                    .agg({'Sample Measurement': 'mean'})
     return df_dailyBin
 
 def main():
@@ -133,8 +134,8 @@ def main():
         if parameterCode == "WIND":
             fdata = fdata.filter(fdata["Parameter Code"] == "61103")
 
-        parameter = schema_dict[parameterCode]
-        df = df.withColumnRenamed("Sample Measurement", parameter)\
+        parameter = schema_dict[parameterCode] + "_avg"
+        df = df.withColumnRenamed("avg(Sample Measurement)", parameter)\
             .withColumnRenamed("State Name", "state_name")\
             .withColumnRenamed("County Name", "county_name")\
             .withColumnRenamed("Date GMT", "date_GMT")\
