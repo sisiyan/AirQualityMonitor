@@ -143,9 +143,9 @@ pressure_avg double NULL,
 relative_humidity_avg double NULL,
 temperature_avg double NULL,
 winds_avg double NULL,
-PM10_mass double NULL,
-PM2point5_FRM double NULL,
-PM2point5_nonFRM double NULL,
+PM10_mass_avg double NULL,
+PM2point5_FRM_avg double NULL,
+PM2point5_nonFRM_avg double NULL,
 GMT_year int NOT NULL,
 GMT_month int NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
