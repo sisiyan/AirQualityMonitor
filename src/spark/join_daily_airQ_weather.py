@@ -117,7 +117,7 @@ def main():
     files_per_year = get_file_list_perYear("sy-insight-epa-data", 1980)
     # for fname in files_per_year
     df_dailyBin = average_over_day("hourly_42101_1980.csv")
-    print df_dailyBin.filter(df_dailyBin["Latitude"] == 33.520661 & df_dailyBin["Longitude"] == -86.801934 & df_dailyBin["Date GMT"] == "1980-01-01").show()
+    print df_dailyBin.filter((df_dailyBin["Latitude"] == 33.520661) & (df_dailyBin["Longitude"] == -86.801934) & (df_dailyBin["Date GMT"] == "1980-01-01")).show()
 
     """
     weather_files, gases_files, particulates_files = classify_files(files_per_year)
