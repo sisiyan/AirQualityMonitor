@@ -226,7 +226,7 @@ def main():
         # write the joined the weather and gas pollutant data to database
         df_join_gases_weather.write\
             .format("jdbc")\
-            .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather?useServerPrepStmts=false&rewriteBatchedStatements=true")\
+            .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
             .option("driver", "com.mysql.jdbc.Driver")\
             .option("truncate", "true")\
             .option("fetchsize", 1000)\
@@ -240,7 +240,7 @@ def main():
         # write the joined the weather and particulate pollutant data to database
         df_join_particulates_weather.write\
             .format("jdbc")\
-            .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather?useServerPrepStmts=false&rewriteBatchedStatements=true")\
+            .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
             .option("driver", "com.mysql.jdbc.Driver")\
             .option("truncate", "true")\
             .option("fetchsize", 1000)\
