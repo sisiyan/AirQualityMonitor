@@ -127,7 +127,7 @@ def rename_cols(df, parameter_avg):
 
 
 def main():
-    for yr in range(2011, 2019):
+    for yr in range(1980, 2019):
 
         files_per_year = get_file_list_perYear("sy-insight-epa-data", yr)
         # for fname in files_per_year
