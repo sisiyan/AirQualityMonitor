@@ -21,7 +21,7 @@ default_args = {
 dag = DAG('airQualityWeather', default_args=default_args, schedule_interval=timedelta(days=1))
 
 task_year = 1980
-now = datetime.datetime.now()
+now = datetime.now()
 current_year = now.year
 
 while task_year <= current_year:
