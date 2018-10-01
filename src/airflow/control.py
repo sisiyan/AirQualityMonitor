@@ -57,7 +57,7 @@ while task_year <= current_year:
     parent = t2
     t3.set_upstream(t2)
     task_year = task_year + 1
-    if task_year = current_year:
+    if task_year == current_year:
         last_task = t3
 
 t4 = BashOperator(
