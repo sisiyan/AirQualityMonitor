@@ -24,7 +24,7 @@ parent = None
 task_year = 1980
 now = datetime.now()
 current_year = now.year
-current_year = 1988
+current_year = 1985
 last_task = None
 
 while task_year <= current_year:
@@ -56,9 +56,11 @@ while task_year <= current_year:
     # next download task start after the clearence of the files in previous loop
     parent = t2
     t3.set_upstream(t2)
-    task_year = task_year + 1
+
     if task_year == current_year:
         last_task = t3
+
+    task_year = task_year + 1
 
 t4 = BashOperator(
     task_id='update_db',
