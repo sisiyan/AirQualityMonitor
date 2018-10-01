@@ -35,10 +35,10 @@ t1 = BashOperator(
     params={'task_year': str(task_year)},
     dag=dag)
 
-# t2 = BashOperator(
-#     task_id='upload_{}_csv_toS3'.format(task_year),
-#     bash_command='/home/ubuntu/insightProject/src/loadDataToS3/uploadToS3.sh',
-#     dag=dag)
+t2 = BashOperator(
+    task_id='upload_{}_csv_toS3'.format(task_year),
+    bash_command='/home/ubuntu/insightProject/src/loadDataToS3/uploadToS3.sh',
+    dag=dag)
 #
 # t3 = BashOperator(
 #     task_id='process_{}'.format(task_year),
