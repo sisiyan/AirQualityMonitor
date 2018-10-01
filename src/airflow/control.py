@@ -24,7 +24,7 @@ task_year = 1980
 now = datetime.now()
 current_year = now.year
 
-while task_year <= current_year:
+while task_year <= 1980:
     '''
     Run the batch processes year by year
     '''
