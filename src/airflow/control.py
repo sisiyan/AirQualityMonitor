@@ -29,14 +29,16 @@ while task_year <= 1988:
     '''
     Run the batch processes year by year
     '''
-    if parent:
-        t1.set_upstream(parent)
+
     t1 = BashOperator(
         task_id='download_{}'.format(task_year),
         bash_command='python /home/ubuntu/insightProject/src/loadDataToS3/download_toLocal.py {{params.task_year}}',
         params={'task_year': str(task_year)},
         dag=dag)
 
+    if parent:
+        t1.set_upstream(parent)
+        
     t2 = BashOperator(
         task_id='upload_{}_csv_toS3'.format(task_year),
         bash_command='cd /home/ubuntu/insightProject/src/loadDataToS3/; ./uploadToS3.sh ', #a space is necessary after .sh
