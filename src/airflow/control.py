@@ -29,11 +29,11 @@ while task_year <= current_year:
     Run the batch processes year by year
     '''
 
-    t1 = BashOperator(
-        task_id='download_{}'.format(task_year),
-        bash_command='python /home/ubuntu/insightProject/src/loadDataToS3/download_toLocal.py {{params.task_year}}',
-        params={'task_year': str(task_year)},
-        dag=dag)
+    # t1 = BashOperator(
+    #     task_id='download_{}'.format(task_year),
+    #     bash_command='python /home/ubuntu/insightProject/src/loadDataToS3/download_toLocal.py {{params.task_year}}',
+    #     params={'task_year': str(task_year)},
+    #     dag=dag)
 
     t2 = BashOperator(
         task_id='upload_{}_csv_toS3'.format(task_year),
@@ -46,7 +46,7 @@ while task_year <= current_year:
         params={'task_year': str(task_year)},
         dag=dag)
 
-    t2.set_upstream(t1)
+    #t2.set_upstream(t1)
     t3.set_upstream(t2)
 
 # t4 = BashOperator(
