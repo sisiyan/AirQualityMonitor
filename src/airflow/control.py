@@ -24,8 +24,10 @@ parent = None
 task_year = 1980
 now = datetime.now()
 current_year = now.year
+current_year = 1988
+last_task = None
 
-while task_year <= 1988:
+while task_year <= current_year:
     '''
     Run the batch processes year by year
     '''
@@ -38,7 +40,7 @@ while task_year <= 1988:
 
     if parent:
         t1.set_upstream(parent)
-        
+
     t2 = BashOperator(
         task_id='upload_{}_csv_toS3'.format(task_year),
         bash_command='cd /home/ubuntu/insightProject/src/loadDataToS3/; ./uploadToS3.sh ', #a space is necessary after .sh
@@ -55,8 +57,12 @@ while task_year <= 1988:
     parent = t2
     t3.set_upstream(t2)
     task_year = task_year + 1
+    if task_year = current_year:
+        last_task = t3
 
-# t4 = BashOperator(
-#     task_id='update_db',
-#     bash_command='/home/ubuntu/insightProject/src/spark/update_db.sh',
-#     dag=dag)
+t4 = BashOperator(
+    task_id='update_db',
+    bash_command='/home/ubuntu/insightProject/src/mysql/update_db.sh',
+    dag=dag)
+
+t4.set_upstream(last_task)
