@@ -39,15 +39,15 @@ t2 = BashOperator(
     task_id='upload_{}_csv_toS3'.format(task_year),
     bash_command='/home/ubuntu/insightProject/src/loadDataToS3/uploadToS3.sh',
     dag=dag)
+
+t3 = BashOperator(
+    task_id='process_{}'.format(task_year),
+    bash_command='/home/ubuntu/insightProject/src/spark/run_join_airQ_weather.sh {{params.task_year}}',
+    params={'task_year': str(task_year)},
+    dag=dag)
 #
-# t3 = BashOperator(
-#     task_id='process_{}'.format(task_year),
-#     bash_command='/home/ubuntu/insightProject/src/spark/run_join_airQ_weather.sh {{params.task_year}}',
-#     params={'task_year': str(task_year)},
-#     dag=dag)
-#
-# t2.set_upstream(t1)
-# t3.set_upstream(t2)
+t2.set_upstream(t1)
+t3.set_upstream(t2)
 
 # t4 = BashOperator(
 #     task_id='update_db',
