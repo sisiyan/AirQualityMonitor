@@ -31,7 +31,7 @@ while task_year <= current_year:
 
     t1 = BashOperator(
         task_id='download_{}'.format(task_year),
-        bash_command='/home/ubuntu/insightProject/src/loadDataToS3/download_toLocal.py {{params.task_year}}',
+        bash_command='python /home/ubuntu/insightProject/src/loadDataToS3/download_toLocal.py {{params.task_year}}',
         params={'task_year': str(task_year)},
         dag=dag)
 
