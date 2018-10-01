@@ -1,4 +1,5 @@
 import os
+import sys 
 
 def download_files(task_year):
     baseUrl = "https://aqs.epa.gov/aqsweb/airdata/hourly_"
