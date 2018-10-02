@@ -18,13 +18,13 @@ default_args = {
     # 'end_date': datetime(2016, 1, 1),
 }
 
-dag = DAG('airQualityWeather', default_args=default_args, schedule_interval=timedelta(days=1))
+dag = DAG('airQualityWeather', default_args=default_args, schedule_interval=timedelta(days=30))
 
 parent = None
 task_year = 1980
 now = datetime.now()
 current_year = now.year
-current_year = 1985
+#current_year = 1985
 last_task = None
 
 while task_year <= current_year:
