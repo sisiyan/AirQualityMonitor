@@ -54,7 +54,7 @@ while task_year <= current_year:
     #t2 depend on t1
     t2.set_upstream(t1)
     # next download task start after the clearence of the files in previous loop
-    parent = t2
+    parent = t3
     t3.set_upstream(t2)
 
     if task_year == current_year:
