@@ -173,7 +173,7 @@ def main(argv):
             df_join_gases = df
         else:
             df_join_gases = df_join_gases\
-                .join(df, ["state_name",'county_name','Site Number','date_GMT'],"outer")
+                .join(df, ["state_name",'county_name','Site Num','date_GMT'],"outer")
     print "Gases join has " + str(df_join_gases.count()) + " rows"
 
     """
