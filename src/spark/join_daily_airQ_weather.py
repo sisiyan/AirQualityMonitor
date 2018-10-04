@@ -149,13 +149,16 @@ def main(argv):
 
         parameter_avg = schema_dict[parameterCode] + "_avg"
         df = rename_cols(df, parameter_avg)
+        print fname + " has " + str(df.count()) + " rows"
 
         if df_join_weather == None:
             df_join_weather = df
         else:
             df_join_weather = df_join_weather\
                 .join(df, ["state_name",'county_name','latitude','longitude','date_GMT'],"outer")
+    print "weather join has " + str(df_join_weather.count()) + "rows"
 
+    """
     # Outer join all gasese pollutant data
     df_join_gases = None
     for fname in gases_files:
@@ -246,7 +249,8 @@ def main(argv):
         .option("password", "airqualityweathersiyan355") \
         .mode('append')\
         .save()
-
+    """
+    
 if __name__ == '__main__':
     if len(sys.argv) > 2:
         print('too many arguments\n')
