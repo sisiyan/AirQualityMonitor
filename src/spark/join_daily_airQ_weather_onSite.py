@@ -108,7 +108,7 @@ def classify_files(files_per_year):
 
 def average_over_day(fdata):
 
-    df = fdata.select('State Name', 'County Name', 'Date GMT','Time GMT','Sample Measurement')
+    df = fdata.select('State Name', 'County Name','Site Number','Date GMT','Time GMT','Sample Measurement')
     df_dailyBin = df.groupby('State Name', 'County Name','Site Number','Date GMT')\
                     .agg({'Sample Measurement': 'mean'})
     return df_dailyBin
@@ -175,7 +175,7 @@ def main(argv):
             df_join_gases = df_join_gases\
                 .join(df, ["state_name",'county_name','Site Number','date_GMT'],"outer")
     print "Gases join has " + str(df_join_gases.count()) + " rows"
-    
+
     """
     # Outer join all particulate pollutant data
     df_join_particulates = None
