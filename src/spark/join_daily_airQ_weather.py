@@ -132,7 +132,7 @@ def main(argv):
     files_per_year = get_file_list_perYear("sy-insight-epa-data", yr)
 
     weather_files, gases_files, particulates_files = classify_files(files_per_year)
-
+    """
     # Outer Join weather data
     df_join_weather = None
     for fname in weather_files:
@@ -149,14 +149,14 @@ def main(argv):
 
         parameter_avg = schema_dict[parameterCode] + "_avg"
         df = rename_cols(df, parameter_avg)
-        print fname + " has " + str(df.count()) + " rows"
+
 
         if df_join_weather == None:
             df_join_weather = df
         else:
             df_join_weather = df_join_weather\
                 .join(df, ["state_name",'county_name','latitude','longitude','date_GMT'],"outer")
-    print "weather join has " + str(df_join_weather.count()) + "rows"
+
 
     """
     # Outer join all gasese pollutant data
@@ -169,13 +169,15 @@ def main(argv):
         df = average_over_day(fdata)
         parameter_avg = schema_dict[parameterCode] + "_avg"
         df = rename_cols(df, parameter_avg)
+        print fname + " has " + str(df.count()) + " rows"
 
         if df_join_gases == None:
             df_join_gases = df
         else:
             df_join_gases = df_join_gases\
                 .join(df, ["state_name",'county_name','latitude','longitude','date_GMT'],"outer")
-
+    print "Gases join has " + str(df_join_gases.count()) + " rows"
+    """
     # Outer join all particulate pollutant data
     df_join_particulates = None
     for fname in particulates_files:
@@ -194,6 +196,8 @@ def main(argv):
             df_join_particulates = df
         else:
             df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','latitude','longitude','date_GMT'],"outer")
+
+
 
     # Inner join the weather data and gas pollutant data
     df_join_gases_weather = df_join_weather\
@@ -250,7 +254,7 @@ def main(argv):
         .mode('append')\
         .save()
     """
-    
+
 if __name__ == '__main__':
     if len(sys.argv) > 2:
         print('too many arguments\n')
