@@ -108,8 +108,8 @@ def classify_files(files_per_year):
 
 def average_over_day(fdata):
 
-    df = fdata.select('State Name', 'County Name','Site Number','Date GMT','Time GMT','Sample Measurement')
-    df_dailyBin = df.groupby('State Name', 'County Name','Site Number','Date GMT')\
+    df = fdata.select('State Name', 'County Name','Site Num','Date GMT','Time GMT','Sample Measurement')
+    df_dailyBin = df.groupby('State Name', 'County Name','Site Num','Date GMT')\
                     .agg({'Sample Measurement': 'mean'})
     return df_dailyBin
 
