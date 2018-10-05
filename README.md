@@ -14,9 +14,10 @@ The broader goal of this project is to build a platform combining air quality da
 <br>
 <br>
 1. Download datasets on EC2 instance and then transfer to S3 bucket
-2. Data transformation and analytics by spark
-3. Cleaned data and analytics results are loaded into a MySQL database launched on RDS.
-4. Crucial analytics results will be displayed on a webpage using Flask.
+2. Data cleaning, transformation, joining and computation are processed by Spark.
+3. Joined tables and analytics results are loaded into a MySQL database launched on RDS.
+4. The historical monthly averaged air pollutant level and weather parameters for each county will be displayed on a webpage made by Dash.
+5. The EPA website keeps updating the datasets multiple times per year. Therefore, Airflow is used to automate the data acquisition, batch processing and storage on every month.
 
 ## AWS set-up
 1. Set up Pegasus and spin up a cluster as described by https://docs.google.com/document/d/1InLxbu-FH2nyd0NuJ3ewdvAt0Ttk_bNUwlQop38lq0Q/edit
