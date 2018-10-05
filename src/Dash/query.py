@@ -1,5 +1,4 @@
 import pandas as pd
-import sqlalchemy
 import pymysql
 
 def get_connection():
@@ -39,7 +38,7 @@ def query_gases(connection, state, county, gases_param):
                  'SO2': 'ppb',
                  'NO2': 'ppb',
                  'Ozone': 'ppm'}
-    
+
     col_name = 'avg(' + params_dict[gases_param] + ')'
     unit = unit_dict[gases_param]
     sql = "SELECT "+ col_name + ", date_GMT FROM Gases_Weather_Join_Daily WHERE state_name = %s AND county_name=%s GROUP BY GMT_year, GMT_month ORDER BY GMT_year, GMT_month"

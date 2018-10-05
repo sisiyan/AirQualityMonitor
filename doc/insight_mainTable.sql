@@ -131,6 +131,12 @@ ozone_avg double NULL,
 GMT_year int NOT NULL,
 GMT_month int NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+ALTER TABLE Gases_Weather_Join_Daily
+ADD CONSTRAINT U_record UNIQUE (latitude,longitude, date_GMT);
+CREATE INDEX state_id
+ON Gases_Weather_Join_Daily (state_name);
+CREATE INDEX county_id
+ON Gases_Weather_Join_Daily (county_name);
 
 CREATE TABLE Particulates_Weather_Join_Daily (
 particulates_rec_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
