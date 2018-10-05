@@ -1,0 +1,35 @@
+# 1. Set up Pegasus and spin up a cluster as described by
+#    https://docs.google.com/document/d/1InLxbu-FH2nyd0NuJ3ewdvAt0Ttk_bNUwlQop38lq0Q/edit
+
+# 2. Install packages
+peg install spark-cluster ssh
+peg install spark-cluster aws
+peg install spark-cluster environment
+
+peg install spark-cluster hadoop
+peg service spark-cluster hadoop start
+
+peg install spark-cluster spark
+peg service spark-cluster spark start
+
+peg install spark-cluster zookeeper
+peg service spark-cluster zookeeper start
+
+peg install spark-cluster kafka
+peg service spark-cluster kafka start
+
+# 3. Create an S3 bucket
+#    s3://sy-insight-aq-climate-data
+# Server for UI on EC2
+
+# 4. Launch RDS with MySQL
+
+# 5. Create an EC2 instance for front-end website server.
+# Install Anaconda5.2.0 on it.
+# Create virtual environment server_env.
+# In server_env install following packages.
+conda install -c conda-forge dash
+conda install -c conda-forge dash-core-components
+conda install -c conda-forge dash_html_components
+conda install -c anaconda pandas
+conda install -c anaconda pymysql

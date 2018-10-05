@@ -18,29 +18,3 @@ The broader goal of this project is to build a platform combining air quality da
 3. Joined tables and analytics results are loaded into a MySQL database launched on RDS.
 4. The historical monthly averaged air pollutant level and weather parameters for each county will be displayed on a webpage made by Dash.
 5. The EPA website keeps updating the datasets multiple times per year. Therefore, Airflow is used to automate the data acquisition, batch processing and storage on every month.
-
-## AWS set-up
-1. Set up Pegasus and spin up a cluster as described by https://docs.google.com/document/d/1InLxbu-FH2nyd0NuJ3ewdvAt0Ttk_bNUwlQop38lq0Q/edit
-2. Install packages
-peg install spark-cluster ssh
-peg install spark-cluster aws
-peg install spark-cluster environment
-
-peg install spark-cluster hadoop
-peg service spark-cluster hadoop start
-
-peg install spark-cluster spark
-peg service spark-cluster spark start
-
-peg install spark-cluster zookeeper
-peg service spark-cluster zookeeper start
-
-peg install spark-cluster kafka
-peg service spark-cluster kafka start
-
-3. Create an S3 bucket
-    s3://sy-insight-aq-climate-data
-4. Launch RDS with MySQL
-    follow the instruction https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.MySQL.html
-
-5. Create an EC2 instance with 300 GB for Download and transfer data.
