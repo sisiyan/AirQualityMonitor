@@ -133,4 +133,4 @@ def update_particulateGraph(state,county,particulates):
     }
 
 if __name__ == '__main__':
-    app.run_server(host="ec2-54-146-48-213.compute-1.amazonaws.com", port=80)
+    app.run_server(host="ec2-54-146-48-213.compute-1.amazonaws.com")
