@@ -17,7 +17,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
     html.H1(children = 'Welcome to search for local air quality and weather!'),
-    
+
     html.Label('State'),
     dcc.Input(id='state', value='Connecticut', type='text'),
 
@@ -133,4 +133,4 @@ def update_particulateGraph(state,county,particulates):
     }
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host="ec2-54-146-48-213.compute-1.amazonaws.com", port=80)
