@@ -10,6 +10,7 @@ The statistical results of each air quality parameter for a week, a month, the s
 The broader goal of this project is to build a platform combining air quality data and weather data for data analytics teams to help develop new predictive models of air quality.
 
 ## Data pipeline
+![pipeline_image](./doc/Pipeline.png)
 1. Download datasets on EC2 instance and then transfer to S3 bucket
 2. Data transformation and analytics by spark
 3. Cleaned data and analytics results are loaded into a MySQL database launched on RDS.
