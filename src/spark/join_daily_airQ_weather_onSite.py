@@ -117,6 +117,7 @@ def rename_cols(df, parameter_avg):
     df = df.withColumnRenamed("avg(Sample Measurement)", parameter_avg)\
         .withColumnRenamed("State Name", "state_name")\
         .withColumnRenamed("County Name", "county_name")\
+        .withColumnRenamed('Site Num', "site_num")\
         .withColumnRenamed("Date GMT", "date_GMT")
 
     df = df.withColumn(parameter_avg, df[parameter_avg].cast(DoubleType()))
@@ -124,139 +125,139 @@ def rename_cols(df, parameter_avg):
     return df
 
 
-def main(argv):
-    #for yr in range(1980, 2019):
-    yr = int(argv)
-    files_per_year = get_file_list_perYear("sy-insight-epa-data", yr)
+def main():
+    for yr in range(1980, 2019):
+        #yr = int(argv)
+        files_per_year = get_file_list_perYear("sy-insight-epa-data", yr)
 
-    weather_files, gases_files, particulates_files = classify_files(files_per_year)
-    """
-    # Outer Join weather data
-    df_join_weather = None
-    for fname in weather_files:
-        year,parameterCode = file_year_paraCode(fname)
-        fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
-                .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
+        weather_files, gases_files, particulates_files = classify_files(files_per_year)
 
-        if parameterCode == "RH_DP":
-            fdata = fdata.filter(fdata["Parameter Name"] == "Relative Humidity ")
-        if parameterCode == "WIND":
-            fdata = fdata.filter(fdata["Parameter Code"] == "61103")
+        # Outer Join weather data
+        df_join_weather = None
+        for fname in weather_files:
+            year,parameterCode = file_year_paraCode(fname)
+            fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
+                    .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
 
-        df = average_over_day(fdata)
+            if parameterCode == "RH_DP":
+                fdata = fdata.filter(fdata["Parameter Name"] == "Relative Humidity ")
+            if parameterCode == "WIND":
+                fdata = fdata.filter(fdata["Parameter Code"] == "61103")
 
-        parameter_avg = schema_dict[parameterCode] + "_avg"
-        df = rename_cols(df, parameter_avg)
+            df = average_over_day(fdata)
 
-
-        if df_join_weather == None:
-            df_join_weather = df
-        else:
-            df_join_weather = df_join_weather\
-                .join(df, ["state_name",'county_name','latitude','longitude','date_GMT'],"outer")
+            parameter_avg = schema_dict[parameterCode] + "_avg"
+            df = rename_cols(df, parameter_avg)
 
 
-    """
-    # Outer join all gasese pollutant data
-    df_join_gases = None
-    for fname in gases_files:
-        year,parameterCode = file_year_paraCode(fname)
-        fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
-                .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
-
-        df = average_over_day(fdata)
-        parameter_avg = schema_dict[parameterCode] + "_avg"
-        df = rename_cols(df, parameter_avg)
-        print fname + " has " + str(df.count()) + " rows"
-
-        if df_join_gases == None:
-            df_join_gases = df
-        else:
-            df_join_gases = df_join_gases\
-                .join(df, ["state_name",'county_name','Site Num','date_GMT'],"outer")
-    print "Gases join has " + str(df_join_gases.count()) + " rows"
-
-    """
-    # Outer join all particulate pollutant data
-    df_join_particulates = None
-    for fname in particulates_files:
-        year,parameterCode = file_year_paraCode(fname)
-
-        if parameterCode == 'SPEC' or parameterCode == 'PM10SPEC':
-            continue
-
-        fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
-                .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
-        df = average_over_day(fdata)
-        parameter_avg = schema_dict[parameterCode] + "_avg"
-        df = rename_cols(df, parameter_avg)
-
-        if df_join_particulates == None:
-            df_join_particulates = df
-        else:
-            df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','latitude','longitude','date_GMT'],"outer")
+            if df_join_weather == None:
+                df_join_weather = df
+            else:
+                df_join_weather = df_join_weather\
+                    .join(df, ["state_name",'county_name','site_num','date_GMT'],"outer")
 
 
 
-    # Inner join the weather data and gas pollutant data
-    df_join_gases_weather = df_join_weather\
-                            .join(df_join_gases, ["state_name",'county_name','latitude','longitude','date_GMT'], "inner")
-    split_date = functions.split(df_join_gases_weather['date_GMT'], '-')
-    df_join_gases_weather = df_join_gases_weather.withColumn('GMT_year', split_date.getItem(0))
-    df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date.getItem(1))
+        # Outer join all gasese pollutant data
+        df_join_gases = None
+        for fname in gases_files:
+            year,parameterCode = file_year_paraCode(fname)
+            fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
+                    .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
 
-    df_join_gases_weather = df_join_gases_weather\
-        .withColumn("date_GMT", df_join_gases_weather["date_GMT"].cast(DateType()))\
-        .withColumn('GMT_year', df_join_gases_weather['GMT_year'].cast(IntegerType()))\
-        .withColumn('GMT_month', df_join_gases_weather['GMT_month'].cast(IntegerType()))\
-        .dropDuplicates()
+            df = average_over_day(fdata)
+            parameter_avg = schema_dict[parameterCode] + "_avg"
+            df = rename_cols(df, parameter_avg)
+            print fname + " has " + str(df.count()) + " rows"
 
-    # Inner join the weather data and particulate pollutant data
-    df_join_particulates_weather = df_join_weather\
-                            .join(df_join_particulates, ["state_name",'county_name','latitude','longitude','date_GMT'], "inner")
-    split_date = functions.split(df_join_particulates_weather['date_GMT'], '-')
-    df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_year', split_date.getItem(0))
-    df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_month', split_date.getItem(1))
+            if df_join_gases == None:
+                df_join_gases = df
+            else:
+                df_join_gases = df_join_gases\
+                    .join(df, ["state_name",'county_name','site_num','date_GMT'],"outer")
+        print "Gases join has " + str(df_join_gases.count()) + " rows"
 
-    df_join_particulates_weather = df_join_particulates_weather\
-        .withColumn("date_GMT", df_join_particulates_weather["date_GMT"].cast(DateType()))\
-        .withColumn('GMT_year', df_join_particulates_weather['GMT_year'].cast(IntegerType()))\
-        .withColumn('GMT_month', df_join_particulates_weather['GMT_month'].cast(IntegerType()))\
-        .dropDuplicates()
-    print "Year: "+ str(yr) + " is done."
 
-    # write the joined the weather and gas pollutant data to database
-    df_join_gases_weather.write\
-        .format("jdbc")\
-        .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
-        .option("driver", "com.mysql.jdbc.Driver")\
-        .option("truncate", "true")\
-        .option("fetchsize", 1000)\
-        .option("batchsize", 100000)\
-        .option("dbtable", "Update_Gases_Weather_Join_Daily")\
-        .option("user", "root")\
-        .option("password", "airqualityweathersiyan355") \
-        .mode('append')\
-        .save()
+        # Outer join all particulate pollutant data
+        df_join_particulates = None
+        for fname in particulates_files:
+            year,parameterCode = file_year_paraCode(fname)
 
-    # write the joined the weather and particulate pollutant data to database
-    df_join_particulates_weather.write\
-        .format("jdbc")\
-        .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
-        .option("driver", "com.mysql.jdbc.Driver")\
-        .option("truncate", "true")\
-        .option("fetchsize", 1000)\
-        .option("batchsize", 100000)\
-        .option("dbtable", "Update_Particulates_Weather_Join_Daily")\
-        .option("user", "root")\
-        .option("password", "airqualityweathersiyan355") \
-        .mode('append')\
-        .save()
-    """
+            if parameterCode == 'SPEC' or parameterCode == 'PM10SPEC':
+                continue
+
+            fdata = sqlContext.read.format('com.databricks.spark.csv').option('header', 'true')\
+                    .load('s3a://sy-insight-epa-data/'+fname).dropDuplicates()
+            df = average_over_day(fdata)
+            parameter_avg = schema_dict[parameterCode] + "_avg"
+            df = rename_cols(df, parameter_avg)
+
+            if df_join_particulates == None:
+                df_join_particulates = df
+            else:
+                df_join_particulates = df_join_particulates.join(df, ["state_name",'county_name','site_num','date_GMT'],"outer")
+
+
+
+        # Inner join the weather data and gas pollutant data
+        df_join_gases_weather = df_join_weather\
+                                .join(df_join_gases, ["state_name",'county_name','site_num','date_GMT'], "inner")
+        split_date = functions.split(df_join_gases_weather['date_GMT'], '-')
+        df_join_gases_weather = df_join_gases_weather.withColumn('GMT_year', split_date.getItem(0))
+        df_join_gases_weather = df_join_gases_weather.withColumn('GMT_month', split_date.getItem(1))
+
+        df_join_gases_weather = df_join_gases_weather\
+            .withColumn("date_GMT", df_join_gases_weather["date_GMT"].cast(DateType()))\
+            .withColumn('GMT_year', df_join_gases_weather['GMT_year'].cast(IntegerType()))\
+            .withColumn('GMT_month', df_join_gases_weather['GMT_month'].cast(IntegerType()))\
+            .dropDuplicates()
+
+        # Inner join the weather data and particulate pollutant data
+        df_join_particulates_weather = df_join_weather\
+                                .join(df_join_particulates, ["state_name",'county_name','site_num','date_GMT'], "inner")
+        split_date = functions.split(df_join_particulates_weather['date_GMT'], '-')
+        df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_year', split_date.getItem(0))
+        df_join_particulates_weather = df_join_particulates_weather.withColumn('GMT_month', split_date.getItem(1))
+
+        df_join_particulates_weather = df_join_particulates_weather\
+            .withColumn("date_GMT", df_join_particulates_weather["date_GMT"].cast(DateType()))\
+            .withColumn('GMT_year', df_join_particulates_weather['GMT_year'].cast(IntegerType()))\
+            .withColumn('GMT_month', df_join_particulates_weather['GMT_month'].cast(IntegerType()))\
+            .dropDuplicates()
+        print "Year: "+ str(yr) + " is done."
+
+        # write the joined the weather and gas pollutant data to database
+        df_join_gases_weather.write\
+            .format("jdbc")\
+            .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
+            .option("driver", "com.mysql.jdbc.Driver")\
+            .option("truncate", "true")\
+            .option("fetchsize", 1000)\
+            .option("batchsize", 100000)\
+            .option("dbtable", "Update_Gases_Weather_Join_Daily")\
+            .option("user", "root")\
+            .option("password", "airqualityweathersiyan355") \
+            .mode('append')\
+            .save()
+
+        # write the joined the weather and particulate pollutant data to database
+        df_join_particulates_weather.write\
+            .format("jdbc")\
+            .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
+            .option("driver", "com.mysql.jdbc.Driver")\
+            .option("truncate", "true")\
+            .option("fetchsize", 1000)\
+            .option("batchsize", 100000)\
+            .option("dbtable", "Update_Particulates_Weather_Join_Daily")\
+            .option("user", "root")\
+            .option("password", "airqualityweathersiyan355") \
+            .mode('append')\
+            .save()
+
 
 if __name__ == '__main__':
-    if len(sys.argv) > 2:
-        print('too many arguments\n')
-        exit()
-    year = sys.argv[1]
-    main(year)
+    # if len(sys.argv) > 2:
+    #     print('too many arguments\n')
+    #     exit()
+    #year = sys.argv[1]
+    main()
