@@ -46,25 +46,31 @@ while task_year <= current_year:
         bash_command='cd /home/ubuntu/insightProject/src/loadDataToS3/; ./uploadToS3.sh ', #a space is necessary after .sh
         dag=dag)
 
-    t3 = BashOperator(
-        task_id='process_{}'.format(task_year),
-        bash_command='/home/ubuntu/insightProject/src/spark/run_join_airQ_weather.sh {{params.task_year}}',
-        params={'task_year': str(task_year)},
-        dag=dag)
+
     #t2 depend on t1
     t2.set_upstream(t1)
     # next download task start after the clearence of the files in previous loop
-    parent = t3
-    t3.set_upstream(t2)
+    parent = t2
+
 
     if task_year == current_year:
-        last_task = t3
+        last_task = t2
 
     task_year = task_year + 1
 
-t4 = BashOperator(
-    task_id='update_db',
-    bash_command='/home/ubuntu/insightProject/src/mysql/update_db.sh',
+
+t3 = BashOperator(
+    task_id='process_{}'.format(task_year),
+    bash_command='/home/ubuntu/insightProject/src/spark/run_join_airQ_weather.sh ',
+    #params={'task_year': str(task_year)},
     dag=dag)
 
-t4.set_upstream(last_task)
+if last_task != None:
+    t3.set_upstream(last_task)
+
+t4 = BashOperator(
+    task_id='update_db',
+    bash_command='/home/ubuntu/insightProject/src/mysql/update_db.sh ',
+    dag=dag)
+
+t4.set_upstream(t3)
