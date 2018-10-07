@@ -1,13 +1,13 @@
 USE airQualityWeather;
 
-TRUNCATE TABLE Gases_Weather_Join_Daily_front;
+TRUNCATE TABLE final_Gases_Weather_Join_Daily;
 
-INSERT INTO Gases_Weather_Join_Daily_front
+INSERT INTO final_Gases_Weather_Join_Daily
 SELECT * FROM Update_Gases_Weather_Join_Daily
 ORDER BY gases_rec_id;
 
-TRUNCATE TABLE Particulates_Weather_Join_Daily_front;
+TRUNCATE TABLE final_Particulates_Weather_Join_Daily;
 
-INSERT INTO Particulates_Weather_Join_Daily_front
+INSERT INTO final_Particulates_Weather_Join_Daily
 SELECT * FROM Update_Particulates_Weather_Join_Daily
 ORDER BY particulates_rec_id;
