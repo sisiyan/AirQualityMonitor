@@ -1,0 +1,6 @@
+rds_host = "endpoint"
+port = "3306"
+db_name = "db_name"
+db_user = "username"
+db_password = "password"
+server_host = "ec2-xx-xxx-xx-xxx.compute-1.amazonaws.com"

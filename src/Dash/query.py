@@ -1,11 +1,12 @@
 import pandas as pd
 import pymysql
+from config import rds_host, port, db_name, db_user, db_password
 
 def get_connection():
-    connection = pymysql.connect(host='airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com',
-                             user='root',
-                             password='airqualityweathersiyan355',
-                             db='airQualityWeather',
+    connection = pymysql.connect(host=rds_host,
+                             user=db_user,
+                             password=db_password,
+                             db=db_name,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
     return connection

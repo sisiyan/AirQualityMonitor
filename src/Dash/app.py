@@ -4,8 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from datetime import datetime as dt
 import query
-
-
+from config import server_host
 
 weather_params = ('Temperature', 'Wind Speed', 'Relative Humidity', 'Barometric Pressure')
 gases_params = ('CO', 'SO2', 'NO2', 'Ozone')
@@ -133,4 +132,4 @@ def update_particulateGraph(state,county,particulates):
     }
 
 if __name__ == '__main__':
-    app.run_server(host="ec2-54-146-48-213.compute-1.amazonaws.com")
+    app.run_server(host=server_host)

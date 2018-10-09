@@ -13,6 +13,7 @@ from pyspark.sql.types import *
 from pyspark.sql import functions
 import datetime
 import time
+from config import rds_host, port, db_name, db_user, db_password
 
 sc = SparkContext()
 sqlContext = SQLContext(sc)
@@ -229,28 +230,29 @@ def main():
         # write the joined the weather and gas pollutant data to database
         df_join_gases_weather.write\
             .format("jdbc")\
-            .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
+            .option("url", "jdbc:mysql://" + rds_host + ":" + port + "/" + db_name)\
             .option("driver", "com.mysql.jdbc.Driver")\
             .option("truncate", "true")\
             .option("fetchsize", 1000)\
             .option("batchsize", 100000)\
             .option("dbtable", "Update_Gases_Weather_Join_Daily")\
-            .option("user", "root")\
-            .option("password", "airqualityweathersiyan355") \
+            .option("user", db_user)\
+            .option("password", db_password) \
             .mode('append')\
             .save()
 
         # write the joined the weather and particulate pollutant data to database
         df_join_particulates_weather.write\
             .format("jdbc")\
-            .option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
+            #.option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
+            .option("url", "jdbc:mysql://" + rds_host + ":" + port + "/" + db_name)\
             .option("driver", "com.mysql.jdbc.Driver")\
             .option("truncate", "true")\
             .option("fetchsize", 1000)\
             .option("batchsize", 100000)\
             .option("dbtable", "Update_Particulates_Weather_Join_Daily")\
-            .option("user", "root")\
-            .option("password", "airqualityweathersiyan355") \
+            .option("user", db_user)\
+            .option("password", db_password) \
             .mode('append')\
             .save()
 

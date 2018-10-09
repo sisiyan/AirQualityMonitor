@@ -1,0 +1,5 @@
+rds_host = "endpoint"
+port = "3306"
+db_name = "db_name"
+db_user = "username"
+db_password = "password"
