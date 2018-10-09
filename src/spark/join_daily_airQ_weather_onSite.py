@@ -244,7 +244,6 @@ def main():
         # write the joined the weather and particulate pollutant data to database
         df_join_particulates_weather.write\
             .format("jdbc")\
-            #.option("url", "jdbc:mysql://airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com:3306/airQualityWeather")\
             .option("url", "jdbc:mysql://" + rds_host + ":" + port + "/" + db_name)\
             .option("driver", "com.mysql.jdbc.Driver")\
             .option("truncate", "true")\
