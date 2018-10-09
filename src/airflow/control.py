@@ -60,7 +60,7 @@ while task_year <= current_year:
 
 
 t3 = BashOperator(
-    task_id='process_{}'.format(task_year),
+    task_id='process_all',
     bash_command='/home/ubuntu/insightProject/src/spark/run_join_airQ_weather.sh ',
     #params={'task_year': str(task_year)},
     dag=dag)
