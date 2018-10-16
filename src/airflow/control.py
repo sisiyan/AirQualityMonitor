@@ -12,10 +12,6 @@ default_args = {
     'email_on_retry': True,
     'retries': 2,
     'retry_delay': timedelta(minutes= 5),
-    # 'queue': 'bash_queue',
-    # 'pool': 'backfill',
-    # 'priority_weight': 10,
-    # 'end_date': datetime(2016, 1, 1),
 }
 
 dag = DAG('airQualityWeather', default_args=default_args, schedule_interval=timedelta(days=30))
@@ -62,7 +58,6 @@ while task_year <= current_year:
 t3 = BashOperator(
     task_id='process_all',
     bash_command='/home/ubuntu/insightProject/src/spark/run_join_airQ_weather.sh ',
-    #params={'task_year': str(task_year)},
     dag=dag)
 
 if last_task != None:
