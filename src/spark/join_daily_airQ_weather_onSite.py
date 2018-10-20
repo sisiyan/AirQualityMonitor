@@ -22,8 +22,7 @@ gases_codes = ['44201', '42401','42101','42602']
 particulates_codes = ['88101','88502','81102']
 
 #define the parameter code list
-parameter_codes = ['44201', '42401','42101','42602','88101','88502','81102',
-    'SPEC','PM10SPEC','WIND','TEMP','PRESS','RH_DP']
+parameter_codes = weather_codes + gases_codes + particulates_codes
 
 #define the dictionary map the file names to schema column names
 schema_dict = {
