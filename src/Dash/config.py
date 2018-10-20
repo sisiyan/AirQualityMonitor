@@ -1,6 +1,0 @@
-rds_host = "airqualityweather.cyncvghu6naw.us-east-1.rds.amazonaws.com"
-port = "3306"
-db_name = "airQualityWeather"
-db_user = "root"
-db_password = "airqualityweathersiyan355"
-server_host = "ec2-54-146-48-213.compute-1.amazonaws.com"
