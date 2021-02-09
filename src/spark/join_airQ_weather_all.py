@@ -237,7 +237,7 @@ def main():
             .option("driver", "com.mysql.jdbc.Driver")\
             .option("dbtable", "Gases_Weather_Join")\
             .option("user", "root")\
-            .option("password", "ys8586dswfye") \
+            .option("password", "xxxxxxxx") \
             .mode('append')\
             .save()
 
@@ -248,7 +248,7 @@ def main():
             .option("driver", "com.mysql.jdbc.Driver")\
             .option("dbtable", "Particulates_Weather_Join")\
             .option("user", "root")\
-            .option("password", "ys8586dswfye") \
+            .option("password", "xxxxxxxx") \
             .mode('append')\
             .save()
 
